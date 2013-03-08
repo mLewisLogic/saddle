@@ -26,7 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faraday (= 0.8.6)
+  faraday (~> 0.8.6)
   rspec (~> 2.13.0)
   rspec-instafail (~> 0.2)
-  typhoeus (= 0.6.2)
+  typhoeus (~> 0.6.2)

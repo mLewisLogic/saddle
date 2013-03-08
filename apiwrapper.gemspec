@@ -11,4 +11,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{
     Base functionality, meant to be extended to concrete implementations.
   }
+
+  gem.add_dependency 'faraday', '~> 0.8.6'
+  gem.add_dependency 'typhoeus', '~> 0.6.2'
 end

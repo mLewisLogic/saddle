@@ -1,3 +1,5 @@
+require 'apiwrapper/util'
+
 class BaseEndpoint
 
   def initialize(requester)
@@ -13,15 +15,22 @@ class BaseEndpoint
   end
 
 
-
-  private
-
+  # Instance helper
   def path(action)
-    "/#{endpoint_prefix}/#{action}"
+    self.class.path(action)
   end
 
-  def endpoint_prefix
-    self.class.to_s.underscore
+
+  #
+  ##
+  ### Class methods
+
+  def self.path(action)
+    "/#{name_underscore}/#{action}"
+  end
+
+  def self.name_underscore
+    underscore(to_s)
   end
 
 end

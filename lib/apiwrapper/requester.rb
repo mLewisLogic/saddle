@@ -1,5 +1,5 @@
 require 'faraday'
-require 'typhoeus'
+require 'typhoeus/adapters/faraday'
 
 
 class Requester
@@ -30,9 +30,13 @@ class Requester
 
   private
 
+  def base_url
+    "http#{'s' if @use_ssl}://#{@host}:#{@port}"
+  end
+
   def connection
-    @connection ||= Faraday.connection.new(
-      :url => "http#{'s' if @use_ssl}://#{@host}:#{@port}",
+    @connection ||= Faraday.new(
+      :url => base_url,
       :headers => {
         :accept => 'application/json'
       }

@@ -12,14 +12,25 @@ class ApiWrapper
 
   private
 
+  def attach_endpoints
+    self.class.endpoints.each do |endpoint|
+      endpoint_instance = endpoint.new(@requester)
+      self.instance_variable_set "@#{endpoint.name_underscore}", endpoint_instance
+      self.class.class_eval { define_method(endpoint.name_underscore) { endpoint_instance } }
+    end
+  end
+
   ###
-  # Attach specific endpoints here
+  # Specific endpoints are included by overloading this method
   # ie.
   #  require 'my_endpoint'
+  #  def endpoints
+  #    [MyEndpoint]
+  #  end
   #
   ###
-  def attach_endpoints
-    puts "You need to overload attach_endpoints"
+  def self.endpoints
+    []
   end
 
 end
