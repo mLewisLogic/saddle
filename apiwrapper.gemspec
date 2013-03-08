@@ -7,9 +7,9 @@ Gem::Specification.new do |gem|
   gem.version       = '0.0.1'
   gem.authors       = ['Mike Lewis']
   gem.email         = ['mike.lewis@airbnb.com']
-  gem.description   = %q{A generic client wrapper for building service-specific wrappers}
+  gem.description   = %q{Makes writing API clients as easy as giving high fives}
   gem.summary       = %q{
-    Base functionality, meant to be extended to concrete implementations.
+    A generic client wrapper for building service-specific wrappers. Base functionality, meant to be extended to concrete implementations.
   }
 
   gem.add_dependency 'faraday', '~> 0.8.6'
