@@ -1,4 +1,5 @@
 require 'faraday'
+require 'faraday_middleware'
 require 'typhoeus/adapters/faraday'
 
 
@@ -12,18 +13,26 @@ class Requester
     @host = opt[:host] || 'localhost'
     @port = opt[:port] || 80
     @use_ssl = opt[:use_ssl]  || false
+    @post_json = opt[:post_json]  || false
+    @num_retries = opt[:num_retries] || 3
   end
 
   def get(url, params)
-    connection.get do |request|
-      request.url(url, params)
-    end
+    connection.get do |req|
+      req.url url, params
+    end.body
   end
 
   def post(url, params)
-    connection.get do |request|
-      request.url(url, params)
-    end
+    connection.post do |req|
+      req.url url
+      if @post_json
+        req.headers['Content-Type'] = 'application/json'
+        req.body = params.to_json
+      else
+        req.params = params
+      end
+    end.body
   end
 
 
@@ -35,14 +44,16 @@ class Requester
   end
 
   def connection
-    @connection ||= Faraday.new(
-      :url => base_url,
-      :headers => {
-        :accept => 'application/json'
-      }
-    ) do |faraday|
-      faraday.request(:url_encoded) # form-encode POST params
-      faraday.adapter(:typhoeus)    # make requests with Typhoeus
+    @connection ||= Faraday.new(base_url) do |builder|
+      builder.request :multipart
+      # Handle retries
+      if @num_retries
+        builder.request :retry, @num_retries
+      end
+      builder.response :raise_error
+      builder.response :json
+      # Make requests with Typhoeus
+      builder.adapter :typhoeus
     end
   end
 
