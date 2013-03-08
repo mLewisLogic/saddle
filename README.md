@@ -17,4 +17,4 @@ For an example of a concrete implementation, see [apiwrapper-example](https://gi
 1. Inherit your endpoint from BaseEndpoint and call get or post from its methods
 2. Inherit your client from ApiWrapper
 3. Overload self.endpoints to include your endpoint
-
+4. Call client.endpoint.action()
