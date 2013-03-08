@@ -1,18 +1,10 @@
-*.gem
-*.rbc
-.bundle
-.config
-coverage
-InstalledFiles
-lib/bundler/man
-pkg
-rdoc
-spec/reports
-test/tmp
-test/version_tmp
-tmp
+# Ignore tempfiles
+*.sw[op]
+.DS_Store
 
-# YARD artifacts
-.yardoc
-_yardoc
-doc/
+# RVM
+.rvmrc
+
+# IDEs
+.idea
+.project
