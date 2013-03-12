@@ -11,7 +11,7 @@
 #
 #   "SSLError".underscore.camelize # => "SslError"
 #
-# BLATANTLY RIPPED FROM RAILS SOURCE
+### BLATANTLY RIPPED FROM RAILS SOURCE
 def underscore(camel_cased_word)
   word = camel_cased_word.to_s.dup
   word.gsub!(/::/, '/')
