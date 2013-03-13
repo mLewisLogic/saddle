@@ -11,12 +11,14 @@ class Requester
   ## use_ssl - true if we should use https (default: false)
   ## post_json - true if POSTs should pass down a JSON-encoded body, otherwise it will be url-encoded (default: false)
   ## num_retries - number of times to retry each request (default: 3)
+  ## timeout - timeout in ms
   def initialize(opt={})
     @host = opt[:host] || 'localhost'
     @port = opt[:port] || 80
     @use_ssl = opt[:use_ssl]  || false
     @post_json = opt[:post_json]  || false
     @num_retries = opt[:num_retries] || 3
+    @timeout = opt[:timeout]
   end
 
 
@@ -52,18 +54,23 @@ class Requester
   # Build a connection instance, wrapped in the middleware that we want
   def connection
     @connection ||= Faraday.new(base_url) do |builder|
+      # Config options
+      builder.options[:timeout] = (@timeout / 1000.0) unless @timeout.nil?
+
       # Support multi-part encoding if there is a file attached
       builder.request :multipart
       # Handle retries
       if @num_retries
         builder.request :retry, @num_retries
       end
+
+      # Make requests with Typhoeus
+      builder.adapter :typhoeus
+
       # Raise exceptions on 4xx and 5xx errors
       builder.response :raise_error
       # Parse out JSON responses if that's how it's coming back
       builder.response :json
-      # Make requests with Typhoeus
-      builder.adapter :typhoeus
     end
   end
 
