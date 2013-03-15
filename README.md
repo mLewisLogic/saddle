@@ -34,8 +34,6 @@ For an example of a concrete implementation, see [apiwrapper-example](https://gi
 
 
 ## todo
-* support timeouts (client level and action-level)
 * support xml post and parse
-* support implementation-specified middleware
 * support default return values upon error
 * allow nesting of endpoints

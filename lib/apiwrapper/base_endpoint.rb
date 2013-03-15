@@ -1,21 +1,25 @@
+require 'apiwrapper/attachable'
 require 'apiwrapper/util'
 
 class BaseEndpoint
 
+  extend Attachable
+
   # Each endpoint needs to have a requester in order to ... make ... uh ... requests.
   def initialize(requester)
     @requester = requester
+    attach_endpoints
   end
 
 
   # Provide 'get' functionality for the implementer class
-  def get(action, params)
-    @requester.get(path(action), params)
+  def get(action, params={}, options={})
+    @requester.get(path(action), params, options)
   end
 
   # Provide 'get' functionality for the implementer class
-  def post(action, params)
-    @requester.post(path(action), params)
+  def post(action, params={}, options={})
+    @requester.post(path(action), params, options)
   end
 
 

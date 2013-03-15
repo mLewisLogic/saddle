@@ -5,39 +5,49 @@ require 'typhoeus/adapters/faraday'
 
 class Requester
 
+  VALID_POST_STYLES = [:json, :urlencoded]
+
   # Available options
   ## host - host to connect to (default: localhost)
   ## port - port to connect on (default: 80)
   ## use_ssl - true if we should use https (default: false)
-  ## post_json - true if POSTs should pass down a JSON-encoded body, otherwise it will be url-encoded (default: false)
+  ## post_style - :json or :urlencoded (default: :json)
   ## num_retries - number of times to retry each request (default: 3)
-  ## timeout - timeout in ms
+  ## timeout - timeout in seconds
+  ## additional_middleware = an Array of more middlewares to apply to the top of the stack
   def initialize(opt={})
     @host = opt[:host] || 'localhost'
     @port = opt[:port] || 80
     @use_ssl = opt[:use_ssl]  || false
-    @post_json = opt[:post_json]  || false
+    @post_style = opt[:post_style] || :json
     @num_retries = opt[:num_retries] || 3
     @timeout = opt[:timeout]
+    @additional_middleware = opt[:@additional_middleware] || []
   end
 
 
   # Make a GET request using this requester
-  def get(url, params)
+  def get(url, params={}, options={})
     connection.get do |req|
+      req.options.merge! options
       req.url url, params
     end.body
   end
 
   # Make a POST request using this requester
-  def post(url, params)
+  def post(url, params={}, options={})
     connection.post do |req|
+      req.options.merge! options
       req.url url
-      if @post_json
-        req.headers['Content-Type'] = 'application/json'
-        req.body = params.to_json
-      else
-        req.params = params
+      # Handle different supported post styles
+      case @post_style
+        when :json
+          req.headers['Content-Type'] = 'application/json'
+          req.body = params.to_json
+        when :urlencoded
+          req.params = params
+        else
+          raise RuntimeError(":post_style must be one of: #{VALID_POST_STYLES.join(',')}")
       end
     end.body
   end
@@ -55,7 +65,12 @@ class Requester
   def connection
     @connection ||= Faraday.new(base_url) do |builder|
       # Config options
-      builder.options[:timeout] = (@timeout / 1000.0) unless @timeout.nil?
+      builder.options[:timeout] = @timeout unless @timeout.nil?
+
+      # Apply additional implementation-specific middlewares
+      @additional_middleware.each do |m|
+        builder.use m
+      end
 
       # Support multi-part encoding if there is a file attached
       builder.request :multipart
