@@ -17,12 +17,22 @@ class Requester
   ## additional_middleware = an Array of more middlewares to apply to the top of the stack
   def initialize(opt={})
     @host = opt[:host] || 'localhost'
+    raise RuntimeException(':host must be a string') unless @host.is_a?(String)
     @port = opt[:port] || 80
-    @use_ssl = opt[:use_ssl]  || false
+    raise RuntimeException(':port must be an integer') unless @port.is_a?(Fixnum)
+    @use_ssl = opt[:use_ssl] || false
+    raise RuntimeException(':use_ssl must be true or false') unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
     @post_style = opt[:post_style] || :json
+    raise RuntimeException(":post_style must be in: #{VALID_POST_STYLES.join(',')}") unless VALID_POST_STYLES.include?(@post_style)
     @num_retries = opt[:num_retries] || 3
+    raise RuntimeException(':num_retries must be an integer') unless @num_retries.is_a?(Fixnum)
     @timeout = opt[:timeout]
-    @additional_middleware = opt[:@additional_middleware] || []
+    unless @timeout.nil?
+      raise RuntimeException(':timeout must be an integer or nil') unless @timeout.is_a?(Fixnum)
+    end
+    @additional_middleware = opt[:additional_middleware] || []
+    raise RuntimeException(':additional_middleware must be an Array') unless @additional_middleware.is_a?(Array)
+    raise RuntimeException('invalid middleware found') unless @additional_middleware.all? { |m| m.is_a?(Faraday::Middleware) }
   end
 
 
@@ -65,7 +75,9 @@ class Requester
   def connection
     @connection ||= Faraday.new(base_url) do |builder|
       # Config options
-      builder.options[:timeout] = @timeout unless @timeout.nil?
+      unless @timeout.nil?
+        builder.options[:timeout] = @timeout
+      end
 
       # Apply additional implementation-specific middlewares
       @additional_middleware.each do |m|
