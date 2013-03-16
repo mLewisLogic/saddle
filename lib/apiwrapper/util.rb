@@ -22,3 +22,24 @@ def underscore(camel_cased_word)
   word
 end
 
+# By default, +camelize+ converts strings to UpperCamelCase.
+#
+# +camelize+ will also convert '/' to '::' which is useful for converting paths to namespaces.
+#
+# Examples:
+#   "active_model".camelize                # => "ActiveModel"
+#   "active_model".camelize(:lower)        # => "activeModel"
+#   "active_model/errors".camelize         # => "ActiveModel::Errors"
+#   "active_model/errors".camelize(:lower) # => "activeModel::Errors"
+#
+# As a rule of thumb you can think of +camelize+ as the inverse of +underscore+,
+# though there are cases where that does not hold:
+#
+#   "SSLError".underscore.camelize # => "SslError"
+#
+### BLATANTLY RIPPED FROM RAILS SOURCE
+def camelize(underscored_word)
+  string = underscored_word.to_s
+  string = string.sub(/^[a-z\d]*/) { $&.capitalize }
+  string.gsub(/(?:_|(\/))([a-z\d]*)/i) { "#{$1}#{$2.capitalize}" }.gsub('/', '::')
+end

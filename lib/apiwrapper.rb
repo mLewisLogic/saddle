@@ -1,10 +1,11 @@
-require 'apiwrapper/attachable'
+require 'apiwrapper/method_tree_builder'
 require 'apiwrapper/requester'
 
 
 class ApiWrapper
 
-  include Attachable
+  include MethodTreeBuilder
+
 
   # Options are passed down to the Requester.
   # See apiwrapper/requester.rb for available options.
@@ -15,9 +16,8 @@ class ApiWrapper
     @requester = Requester.new(
       default_options.merge(opt)
     )
-    attach_endpoints
+    attach_endpoint_tree
   end
-
 
 
   ### OVERRIDE THIS!
@@ -34,13 +34,7 @@ class ApiWrapper
   #
   ###
   def default_options
-    raise RuntimeError("self.default_options must be overridden.")
-  end
-
-
-  # See apiwrapper/attachable.rb for the actual implementation. This error just helps the noobs.
-  def endpoints
-    raise RuntimeError("self.endpoints must be overridden.")
+    raise "You must override 'default_options'"
   end
 
 
@@ -57,6 +51,17 @@ class ApiWrapper
   ###
   def additional_middleware
     []
+  end
+
+
+
+  def self.inherited(obj)
+    path, = caller[0].partition(":")
+    @@implementation_root = File.dirname(path)
+  end
+
+  def self.implementation_root
+    @@implementation_root
   end
 
 end

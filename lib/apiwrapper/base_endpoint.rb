@@ -1,14 +1,10 @@
-require 'apiwrapper/attachable'
 require 'apiwrapper/util'
 
 class BaseEndpoint
 
-  extend Attachable
-
   # Each endpoint needs to have a requester in order to ... make ... uh ... requests.
   def initialize(requester)
     @requester = requester
-    attach_endpoints
   end
 
 
