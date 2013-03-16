@@ -1,6 +1,6 @@
 # saddle
 
-Hey nerd!
+Hey nerd! Wrangle your SOA!
 
 
 Saddle makes writing service clients as easy as giving high fives.©™®℗☃✓
