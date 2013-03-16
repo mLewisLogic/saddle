@@ -3,7 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |gem|
-  gem.name          = 'lasso'
+  gem.name          = 'saddle'
   gem.version       = '0.0.1'
   gem.authors       = ['Mike Lewis']
   gem.email         = ['mike.lewis@airbnb.com']

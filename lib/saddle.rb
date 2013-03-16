@@ -1,14 +1,14 @@
-require 'lasso/method_tree_builder'
-require 'lasso/requester'
+require 'saddle/method_tree_builder'
+require 'saddle/requester'
 
 
-class Lasso
+class Saddle
 
   include MethodTreeBuilder
 
 
   # Options are passed down to the Requester.
-  # See lasso/requester.rb for available options.
+  # See saddle/requester.rb for available options.
   def initialize(opt={})
     opt = opt.merge({
       :additional_middleware => additional_middleware

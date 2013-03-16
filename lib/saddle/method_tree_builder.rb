@@ -1,5 +1,5 @@
-require 'lasso/base_endpoint'
-require 'lasso/util'
+require 'saddle/base_endpoint'
+require 'saddle/util'
 
 
 module MethodTreeBuilder

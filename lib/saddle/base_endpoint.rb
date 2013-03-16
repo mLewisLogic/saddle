@@ -1,4 +1,4 @@
-require 'lasso/util'
+require 'saddle/util'
 
 class BaseEndpoint
 
