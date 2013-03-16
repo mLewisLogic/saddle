@@ -1,14 +1,14 @@
-require 'apiwrapper/method_tree_builder'
-require 'apiwrapper/requester'
+require 'lasso/method_tree_builder'
+require 'lasso/requester'
 
 
-class ApiWrapper
+class Lasso
 
   include MethodTreeBuilder
 
 
   # Options are passed down to the Requester.
-  # See apiwrapper/requester.rb for available options.
+  # See lasso/requester.rb for available options.
   def initialize(opt={})
     opt = opt.merge({
       :additional_middleware => additional_middleware

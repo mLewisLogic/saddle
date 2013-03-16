@@ -1,5 +1,5 @@
-require 'apiwrapper/base_endpoint'
-require 'apiwrapper/util'
+require 'lasso/base_endpoint'
+require 'lasso/util'
 
 
 module MethodTreeBuilder

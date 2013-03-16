@@ -1,4 +1,4 @@
-require 'apiwrapper/util'
+require 'lasso/util'
 
 class BaseEndpoint
 
