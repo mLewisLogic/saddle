@@ -9,10 +9,9 @@ module MethodTreeBuilder
   end
 
   def attach_endpoint_tree
-    unless Dir.exists?(endpoint_root)
-      raise "Please create an 'endpoints' directory at the root level of your client."
+    if Dir.exists?(endpoint_root)
+      attach_endpoint_directory(self, endpoint_root)
     end
-    attach_endpoint_directory(self, endpoint_root)
   end
 
   def attach_endpoint_directory(node, directory)
