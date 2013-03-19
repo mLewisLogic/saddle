@@ -1,6 +1,5 @@
 require 'faraday'
 require 'faraday_middleware'
-require 'typhoeus/adapters/faraday'
 
 
 class Requester
@@ -90,9 +89,6 @@ class Requester
       if @num_retries
         builder.request :retry, @num_retries
       end
-
-      # Make requests with Typhoeus
-      builder.adapter :typhoeus
 
       # Raise exceptions on 4xx and 5xx errors
       builder.response :raise_error
