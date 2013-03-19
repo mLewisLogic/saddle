@@ -39,7 +39,7 @@ module MethodTreeBuilder
 
   # Create an instance and foist it upon this node
   def build_and_attach_endpoint_to_node(node, method_name, endpoint_class)
-    endpoint_instance = endpoint_class.new(method_name, @requester)
+    endpoint_instance = endpoint_class.new(@requester, method_name, node)
     node.instance_variable_set("@#{method_name}", endpoint_instance)
     node.class.class_eval { define_method(method_name) { endpoint_instance } }
     endpoint_instance

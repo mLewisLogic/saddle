@@ -2,10 +2,13 @@ require 'saddle/util'
 
 class BaseEndpoint
 
+  attr_reader :relative_path, :parent
+
   # Each endpoint needs to have a requester in order to ... make ... uh ... requests.
-  def initialize(endpoint_root, requester)
-    @endpoint_root = endpoint_root
+  def initialize(requester, relative_path, parent=nil)
     @requester = requester
+    @relative_path = relative_path
+    @parent = parent.is_a?(BaseEndpoint) ? parent : nil
   end
 
 
@@ -22,7 +25,17 @@ class BaseEndpoint
 
   # Get the url path for this endpoint/action combo
   def path(action)
-    "/#{@endpoint_root}/#{action}"
+    '/' + (path_array + [action]).join('/')
+  end
+
+  def path_array
+    parts = []
+    node = self
+    until node.nil?
+      parts << node.relative_path
+      node = node.parent
+    end
+    parts
   end
 
 end
