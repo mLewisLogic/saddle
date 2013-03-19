@@ -22,7 +22,7 @@ module MethodTreeBuilder
       if File.directory?(full_path)
         # It's a directory. We're going to recurse down, but first we need to
         # create a branch node and build this directory onto it
-        branch_node = build_and_attach_endpoint_to_node(node, BaseEndpoint, entry)
+        branch_node = build_and_attach_endpoint_to_node(node, entry, BaseEndpoint)
         attach_endpoint_directory(branch_node, full_path)
       else
         # It's an endpoint file, so load it
@@ -32,15 +32,14 @@ module MethodTreeBuilder
         class_name = camelize(without_extension) + 'Endpoint'
         endpoint = Object.const_get(class_name)
         # Now attach it to our method tree
-        build_and_attach_endpoint_to_node(node, endpoint)
+        build_and_attach_endpoint_to_node(node, without_extension, endpoint)
       end
     end
   end
 
   # Create an instance and foist it upon this node
-  def build_and_attach_endpoint_to_node(node, endpoint_class, name=nil)
-    endpoint_instance = endpoint_class.new(@requester)
-    method_name = name || endpoint_class.name_underscore
+  def build_and_attach_endpoint_to_node(node, method_name, endpoint_class)
+    endpoint_instance = endpoint_class.new(method_name, @requester)
     node.instance_variable_set("@#{method_name}", endpoint_instance)
     node.class.class_eval { define_method(method_name) { endpoint_instance } }
     endpoint_instance

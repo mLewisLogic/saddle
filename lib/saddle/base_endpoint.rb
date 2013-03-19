@@ -3,7 +3,8 @@ require 'saddle/util'
 class BaseEndpoint
 
   # Each endpoint needs to have a requester in order to ... make ... uh ... requests.
-  def initialize(requester)
+  def initialize(endpoint_root, requester)
+    @endpoint_root = endpoint_root
     @requester = requester
   end
 
@@ -21,16 +22,7 @@ class BaseEndpoint
 
   # Get the url path for this endpoint/action combo
   def path(action)
-    self.class.path(action)
-  end
-  def self.path(action)
-    "/#{name_underscore}/#{action}"
-  end
-
-
-  # Get the url path of this endpoint, based upon it's class name
-  def self.name_underscore
-    underscore(to_s)
+    "/#{@endpoint_root}/#{action}"
   end
 
 end
