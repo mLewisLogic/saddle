@@ -32,7 +32,7 @@ class BaseEndpoint
     @requester.delete(path(action), params, options)
   end
 
-  
+
   # Get the url path for this endpoint/action combo
   def path(action)
     '/' + (path_array + [action]).join('/')

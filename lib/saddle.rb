@@ -6,6 +6,7 @@ class Saddle
 
   include MethodTreeBuilder
 
+  attr_reader :requester
 
   # Options are passed down to the Requester.
   # See saddle/requester.rb for available options.
@@ -20,9 +21,12 @@ class Saddle
   end
 
 
-  ### OVERRIDE THIS!
+  ### OVERRIDE THIS IF YOU WANT!
   #
   # Override this to add default initialize options to a concrete implementation
+  #
+  # Note: You must also override this if you want endpoint support
+  #
   # ex:
   #
   #  def self.default_options
@@ -34,7 +38,7 @@ class Saddle
   #
   ###
   def default_options
-    raise "You must override 'default_options'"
+    {}
   end
 
 
