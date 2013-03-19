@@ -17,7 +17,9 @@ class Saddle
     @requester = Requester.new(
       default_options.merge(opt)
     )
-    attach_endpoint_tree
+    if knows_root?
+      attach_endpoint_tree
+    end
   end
 
 
@@ -66,6 +68,10 @@ class Saddle
 
   def self.implementation_root
     @@implementation_root
+  end
+
+  def knows_root?
+    defined?(@@implementation_root)
   end
 
 end
