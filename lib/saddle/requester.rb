@@ -37,15 +37,16 @@ class Requester
 
   # Make a GET request using this requester
   def get(url, params={}, options={})
-    connection.get do |req|
+    response = connection.get do |req|
       req.options.merge! options
       req.url url, params
-    end.body
+    end
+    response.body
   end
 
   # Make a POST request using this requester
   def post(url, params={}, options={})
-    connection.post do |req|
+    response = connection.post do |req|
       req.options.merge! options
       req.url url
       # Handle different supported post styles
@@ -58,7 +59,8 @@ class Requester
         else
           raise RuntimeError(":post_style must be one of: #{VALID_POST_STYLES.join(',')}")
       end
-    end.body
+    end
+    response.body
   end
 
 
@@ -89,6 +91,9 @@ class Requester
       if @num_retries
         builder.request :retry, @num_retries
       end
+
+      # Use the default adapter
+      builder.adapter Faraday.default_adapter
 
       # Raise exceptions on 4xx and 5xx errors
       builder.response :raise_error
