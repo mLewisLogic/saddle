@@ -35,7 +35,7 @@ class Requester
   end
 
 
-  # Make a GET request using this requester
+  # Make a GET request
   def get(url, params={}, options={})
     response = connection.get do |req|
       req.options.merge! options
@@ -44,9 +44,9 @@ class Requester
     response.body
   end
 
-  # Make a POST request using this requester
-  def post(url, params={}, options={})
-    response = connection.post do |req|
+  # Handle request logic for PUT or POST
+  def post_or_put(f, url, params={}, options={})
+    response = connection.send(f) do |req|
       req.options.merge! options
       req.url url
       # Handle different supported post styles
@@ -59,6 +59,25 @@ class Requester
         else
           raise RuntimeError(":post_style must be one of: #{VALID_POST_STYLES.join(',')}")
       end
+    end
+    response.body
+  end
+
+  # Make a POST request
+  def post(url, params={}, options={})
+    post_or_put(:post, url, params, options)
+  end
+
+  # Make a PUT request
+  def put(url, params={}, options={})
+    post_or_put(:put, url, params, options)
+  end
+
+  # Make a DELETE request
+  def delete(url, params={}, options={})
+    response = connection.delete do |req|
+      req.options.merge! options
+      req.url url, params
     end
     response.body
   end

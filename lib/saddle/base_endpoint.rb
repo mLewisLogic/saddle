@@ -12,17 +12,27 @@ class BaseEndpoint
   end
 
 
-  # Provide 'get' functionality for the implementer class
+  # Provide GET functionality for the implementer class
   def get(action, params={}, options={})
     @requester.get(path(action), params, options)
   end
 
-  # Provide 'get' functionality for the implementer class
+  # Provide POST functionality for the implementer class
   def post(action, params={}, options={})
     @requester.post(path(action), params, options)
   end
 
+  # Provide PUT functionality for the implementer class
+  def put(action, params={}, options={})
+    @requester.put(path(action), params, options)
+  end
 
+  # Provide DELETE functionality for the implementer class
+  def delete(action, params={}, options={})
+    @requester.delete(path(action), params, options)
+  end
+
+  
   # Get the url path for this endpoint/action combo
   def path(action)
     '/' + (path_array + [action]).join('/')
