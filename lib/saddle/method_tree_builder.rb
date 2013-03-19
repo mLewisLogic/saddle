@@ -29,8 +29,8 @@ module MethodTreeBuilder
         require(full_path)
         without_extension = File.basename(entry, File.extname(entry))
         # Get the endpoint class based upon the filename
-        endpoint_name = camelize(without_extension)
-        endpoint = Object.const_get(endpoint_name)
+        class_name = camelize(without_extension) + 'Endpoint'
+        endpoint = Object.const_get(class_name)
         # Now attach it to our method tree
         build_and_attach_endpoint_to_node(node, endpoint)
       end
