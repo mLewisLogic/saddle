@@ -33,7 +33,7 @@ class Requester
     raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
     @timeout = opt[:timeout]
     unless @timeout.nil?
-      raise ':timeout must be an integer or nil' unless @timeout.is_a?(Fixnum)
+      raise ':timeout must be a number or nil' unless @timeout.is_a?(Numeric)
     end
     @additional_middleware = opt[:additional_middleware] || []
     raise ':additional_middleware must be an Array' unless @additional_middleware.is_a?(Array)
