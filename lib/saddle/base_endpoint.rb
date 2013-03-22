@@ -14,22 +14,31 @@ class BaseEndpoint
 
   # Provide GET functionality for the implementer class
   def get(action, params={}, options={})
-    @requester.get(path(action), params, options)
+    request(:get, action, params, options)
   end
 
   # Provide POST functionality for the implementer class
   def post(action, params={}, options={})
-    @requester.post(path(action), params, options)
+    request(:post, action, params, options)
   end
 
   # Provide PUT functionality for the implementer class
   def put(action, params={}, options={})
-    @requester.put(path(action), params, options)
+    request(:put, action, params, options)
   end
 
   # Provide DELETE functionality for the implementer class
   def delete(action, params={}, options={})
-    @requester.delete(path(action), params, options)
+    request(:delete, action, params, options)
+  end
+
+  def request(method, action, params={}, options={})
+    # Augment in interesting options
+    options[:saddle] = {
+      :endpoint_chain => endpoint_chain,
+      :action => action,
+    }
+    @requester.send(method, path(action), params, options)
   end
 
 
@@ -39,13 +48,18 @@ class BaseEndpoint
   end
 
   def path_array
-    parts = []
+    endpoint_chain.map(&:relative_path)
+  end
+
+  # Get the parent chain that led to this endpoint
+  def endpoint_chain
+    chain = []
     node = self
     until node.nil?
-      parts << node.relative_path
+      chain << node
       node = node.parent
     end
-    parts
+    chain
   end
 
 end
