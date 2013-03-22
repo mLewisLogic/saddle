@@ -1,3 +1,5 @@
+require 'faraday'
+
 module FaradayMiddleware
   # Public: Enforces a ruby timeout on the request
   # :timeout must be present in the request or client options

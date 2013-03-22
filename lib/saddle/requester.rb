@@ -139,7 +139,7 @@ class Requester
       # Raise exceptions on 4xx and 5xx errors
       builder.response :raise_error
       # Handle parsing out the response if it's JSON
-      builder.use ParseJson
+      builder.use SaddleMiddleware::ParseJson
     end
   end
 
