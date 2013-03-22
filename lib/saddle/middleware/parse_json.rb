@@ -4,7 +4,6 @@ require 'faraday_middleware/response_middleware'
 module SaddleMiddleware
 # Public: Parse response bodies as JSON.
   class ParseJson < FaradayMiddleware::ResponseMiddleware
-
     MIME_TYPE = 'application/json'.freeze
 
     dependency do

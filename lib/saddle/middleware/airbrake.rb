@@ -1,10 +1,10 @@
-require 'faraday_middleware/response_middleware'
+require 'faraday'
 
 
 module SaddleMiddleware
   # Public: Reports exceptions to airbrake
   #
-  class Airbrake < FaradayMiddleware::ResponseMiddleware
+  class Airbrake < Faraday::Middleware
 
     def initialize(app, airbrake_api_key)
       super(app)
@@ -20,7 +20,7 @@ module SaddleMiddleware
         @app.call(env)
       rescue => e
         ::Airbrake.notify(e)
-        throw e
+        raise
       end
     end
 

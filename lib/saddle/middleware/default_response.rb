@@ -1,10 +1,10 @@
-require 'faraday_middleware/response_middleware'
+require 'faraday'
 
 
 module SaddleMiddleware
   # Public: Returns a default response in the case of an exception
   # Expects default_response to be defined in the request of connection options, otherwise rethrows exception
-  class DefaultResponse < FaradayMiddleware::ResponseMiddleware
+  class DefaultResponse < Faraday::Middleware
 
     def call(env)
       begin
@@ -13,7 +13,7 @@ module SaddleMiddleware
         if res = env[:request][:default_response]
           return ::Faraday::Response.new(:body => res)
         else
-          throw e
+          raise
         end
       end
     end
