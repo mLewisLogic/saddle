@@ -1,7 +1,10 @@
 require 'faraday'
 require 'faraday_middleware'
 
+require 'saddle/middleware/airbrake'
+require 'saddle/middleware/default_response'
 require 'saddle/middleware/parse_json'
+
 
 
 class Requester
@@ -17,6 +20,7 @@ class Requester
   ## num_retries - number of times to retry each request (default: 3)
   ## timeout - timeout in seconds
   ## additional_middleware - an Array of more middlewares to apply to the top of the stack
+  ##                       - each middleware consists of hash of klass, and optionally args (an array)
   ## stubs - test stubs for specs
   def initialize(opt={})
     @host = opt[:host] || 'localhost'
@@ -37,7 +41,8 @@ class Requester
     end
     @additional_middleware = opt[:additional_middleware] || []
     raise ':additional_middleware must be an Array' unless @additional_middleware.is_a?(Array)
-    raise 'invalid middleware found' unless @additional_middleware.all? { |m| m.is_a?(Faraday::Middleware) }
+    raise 'invalid middleware found' unless @additional_middleware.all? { |m| m[:klass].is_a?(Faraday::Middleware) }
+    raise 'middleware arguments must be an array' unless @additional_middleware.all? { |m| m[:args].nil? || m[:args].is_a?(Array) }
     @use_ssl = opt[:use_ssl] || false
     raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
     @stubs = opt[:stubs] || nil
@@ -111,9 +116,12 @@ class Requester
         builder.options[:timeout] = @timeout
       end
 
+      # Support default return values upon exception
+      builder.use SaddleMiddleware::DefaultResponse
+
       # Apply additional implementation-specific middlewares
       @additional_middleware.each do |m|
-        builder.use m
+        builder.use m[:klass], *m[:args]
       end
 
       # Support multi-part encoding if there is a file attached
@@ -135,7 +143,7 @@ class Requester
       # Raise exceptions on 4xx and 5xx errors
       builder.response :raise_error
       # Handle parsing out the response if it's JSON
-      builder.use ParseJson
+      builder.use SaddleMiddleware::ParseJson
     end
   end
 
