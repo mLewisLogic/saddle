@@ -1,5 +1,7 @@
 require 'saddle/util'
 
+
+
 class BaseEndpoint
 
   attr_reader :relative_path, :parent

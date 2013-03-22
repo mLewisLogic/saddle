@@ -1,6 +1,9 @@
 require 'saddle/method_tree_builder'
 require 'saddle/requester'
 
+require 'saddle/middleware/ruby_timeout'
+
+
 
 class Saddle
 
@@ -54,8 +57,9 @@ class Saddle
   #
   ###
   def default_middleware
-     [{:klass => FaradayMiddleware::DefaultResponse},
-      {:klass => FaradayMiddleware::RubyTimeout}]
+     [
+      {:klass => SaddleMiddleware::RubyTimeout},
+     ]
   end
 
 

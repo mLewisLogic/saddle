@@ -1,10 +1,11 @@
 require 'faraday'
 require 'faraday_middleware'
 
-require 'saddle/middleware/parse_json'
-require 'saddle/middleware/ruby_timeout'
-require 'saddle/middleware/default_response'
 require 'saddle/middleware/airbrake'
+require 'saddle/middleware/default_response'
+require 'saddle/middleware/parse_json'
+
+
 
 class Requester
 
@@ -114,6 +115,9 @@ class Requester
       unless @timeout.nil?
         builder.options[:timeout] = @timeout
       end
+
+      # Support default return values upon exception
+      builder.use SaddleMiddleware::DefaultResponse
 
       # Apply additional implementation-specific middlewares
       @additional_middleware.each do |m|

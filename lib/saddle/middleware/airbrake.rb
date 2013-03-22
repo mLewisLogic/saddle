@@ -1,6 +1,7 @@
 require 'faraday_middleware/response_middleware'
 
-module FaradayMiddleware
+
+module SaddleMiddleware
   # Public: Reports exceptions to airbrake
   #
   class Airbrake < Faraday::ResponseMiddleware
