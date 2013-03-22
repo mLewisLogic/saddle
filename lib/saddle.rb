@@ -11,9 +11,7 @@ class Saddle
   # Options are passed down to the Requester.
   # See saddle/requester.rb for available options.
   def initialize(opt={})
-    opt = opt.merge({
-      :additional_middleware => additional_middleware
-    })
+    opt[:additional_middleware] ||= default_middleware
     @requester = Requester.new(
       default_options.merge(opt)
     )
@@ -50,13 +48,14 @@ class Saddle
   # ex:
   #
   # require 'my_middleware'
-  # def self.additional_middleware
+  # def self.default_middleware
   #   [MyMiddleware]
   # end
   #
   ###
-  def additional_middleware
-    []
+  def default_middleware
+     [{:klass => FaradayMiddleware::DefaultResponse},
+      {:klass => FaradayMiddleware::RubyTimeout}]
   end
 
 
