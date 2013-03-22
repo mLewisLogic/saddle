@@ -41,7 +41,7 @@ class Requester
     end
     @additional_middleware = opt[:additional_middleware] || []
     raise ':additional_middleware must be an Array' unless @additional_middleware.is_a?(Array)
-    raise 'invalid middleware found' unless @additional_middleware.all? { |m| m[:klass].is_a?(Faraday::Middleware) }
+    raise 'invalid middleware found' unless @additional_middleware.all? { |m| m[:klass] < Faraday::Middleware }
     raise 'middleware arguments must be an array' unless @additional_middleware.all? { |m| m[:args].nil? || m[:args].is_a?(Array) }
     @use_ssl = opt[:use_ssl] || false
     raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))

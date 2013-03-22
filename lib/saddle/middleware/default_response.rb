@@ -4,7 +4,7 @@ require 'faraday_middleware/response_middleware'
 module SaddleMiddleware
   # Public: Returns a default response in the case of an exception
   # Expects default_response to be defined in the request of connection options, otherwise rethrows exception
-  class DefaultResponse < Faraday::ResponseMiddleware
+  class DefaultResponse < FaradayMiddleware::ResponseMiddleware
 
     def call(env)
       begin
