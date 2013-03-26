@@ -37,7 +37,7 @@ class BaseEndpoint
   def request(method, action, params={}, options={})
     # Augment in interesting options
     options[:saddle] = {
-      :endpoint_chain => endpoint_chain,
+      :call_chain => path_array,
       :action => action,
     }
     @requester.send(method, path(action), params, options)
