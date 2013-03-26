@@ -14,7 +14,6 @@ class Saddle
   # Options are passed down to the Requester.
   # See saddle/requester.rb for available options.
   def initialize(opt={})
-    opt[:additional_middleware] ||= default_middleware
     @requester = Requester.new(
       default_options.merge(opt)
     )
@@ -41,7 +40,7 @@ class Saddle
   #
   ###
   def default_options
-    {}
+    {:addtional_middleware => default_middleware}
   end
 
 
