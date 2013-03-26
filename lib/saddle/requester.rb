@@ -4,7 +4,7 @@ require 'faraday_middleware'
 require 'saddle/middleware/airbrake'
 require 'saddle/middleware/default_response'
 require 'saddle/middleware/parse_json'
-
+require 'saddle/middleware/statsd_logging'
 
 
 class Requester
