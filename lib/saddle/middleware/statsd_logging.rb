@@ -3,7 +3,7 @@ require 'statsd'
 module SaddleMiddleware
   # Public: Wraps request with statsd logging
   # Expects statsd_path in request options.  However, if using saddle and no statsd_path is specified
-  # will read endpoint_chain and use as statsd_path
+  # will read call_chain and action and use them to construct a statsd_path
   class StatsdLogging < Faraday::Middleware
     attr_accessor :graphite_host, :graphite_port, :namespace
 
@@ -24,8 +24,13 @@ module SaddleMiddleware
     end
 
     def call(env)
-      statsd_path = env[:request][:statsd_path] || env[:request][:saddle][:endpoint_chain]
-      if statsd_path && statsd_path.present?
+      if env[:request][:statsd_path]
+        statsd_path = env[:request][:statsd_path]
+      elsif env[:request][:saddle] && env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
+        statsd_path = "#{env[:request][:saddle][:call_chain].join(".")}.#{env[:request][:saddle][:action]}"
+      end
+
+      if statsd_path
         self.statsd.time statsd_path do
           @app.call(env)
         end
