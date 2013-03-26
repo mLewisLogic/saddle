@@ -27,7 +27,7 @@ module SaddleMiddleware
       if env[:request][:statsd_path]
         statsd_path = env[:request][:statsd_path]
       elsif env[:request][:saddle] && env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
-        statsd_path = "#{env[:request][:saddle][:call_chain].join(".")}.#{env[:request][:saddle][:action]}"
+        statsd_path = (env[:request][:saddle][:call_chain] << env[:request][:saddle][:action]).join(".")
       end
 
       if statsd_path
