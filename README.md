@@ -21,7 +21,7 @@ For an example of a concrete implementation, see [saddle-example](https://github
 
 ## features
 * set default connection settings for your implementation
-* post urlencoded or JSON (xml soon)
+* post urlencoded or JSON
 * auto-parse JSON responses
 * automatic retries and exception throwing
 
@@ -34,5 +34,9 @@ For an example of a concrete implementation, see [saddle-example](https://github
 
 
 ## todo
-* support xml post and parse
-* support default return values upon error
+* xml posting
+* xml parsing
+* resource-style routing
+* base endpoints
+* clean up custom middleware interface
+* load onto rubygems
