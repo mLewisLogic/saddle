@@ -124,6 +124,9 @@ module Saddle
           builder.use m[:klass], *m[:args]
         end
 
+        # Hard timeout on the entire request
+        builder.use Saddle::Middleware::RubyTimeout
+
         # Support multi-part encoding if there is a file attached
         builder.request :multipart
         # Handle retries

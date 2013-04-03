@@ -13,9 +13,9 @@ module Saddle
 
 
     def self.create(opt={})
-      requester = Saddle::Requester.new(
-        default_options.merge(opt)
-      )
+      options = default_options.merge(opt)
+      options[:additional_middleware] = self.additional_middleware
+      requester = Saddle::Requester.new(options)
       self.build_tree(requester)
     end
 
@@ -37,9 +37,7 @@ module Saddle
     #
     ###
     def self.default_options
-      {
-        :addtional_middleware => self.default_middleware,
-      }
+      {}
     end
 
 
@@ -54,10 +52,8 @@ module Saddle
     # end
     #
     ###
-    def self.default_middleware
-      [
-        {:klass => Saddle::Middleware::RubyTimeout},
-      ]
+    def self.additional_middleware
+      []
     end
 
 
