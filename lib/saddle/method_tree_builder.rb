@@ -47,35 +47,22 @@ module Saddle::MethodTreeBuilder
         when Class
           # A class means that it's a node
           # Build out this endpoint on the current node
-          self.build_and_attach_node(
-            current_node,
+          current_node.build_and_attach_node(
             const,
-            ActiveSupport::Inflector.underscore(const_symbol),
-            requester
+            ActiveSupport::Inflector.underscore(const_symbol)
           )
         when Module
           # A module means that it's a branch
           # Build the branch out with a base endpoint
-          branch_node = self.build_and_attach_node(
-            current_node,
+          branch_node = current_node.build_and_attach_node(
             Saddle::BaseEndpoint,
-            ActiveSupport::Inflector.underscore(const_symbol),
-            requester
+            ActiveSupport::Inflector.underscore(const_symbol)
           )
           # Build out the branch's endpoints on the new branch node
           self.build_node_children(const, branch_node, requester)
         else
       end
     end
-  end
-
-
-  # Create an instance and foist it upon this node
-  def build_and_attach_node(current_node, endpoint_class, method_name, requester)
-    endpoint_instance = endpoint_class.new(requester, method_name, current_node)
-    current_node.instance_variable_set("@#{method_name}", endpoint_instance)
-    current_node.class.class_eval { define_method(method_name) { endpoint_instance } }
-    endpoint_instance
   end
 
 

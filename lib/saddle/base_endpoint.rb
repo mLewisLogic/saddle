@@ -65,6 +65,14 @@ module Saddle
       chain.reverse
     end
 
+
+    # Create an endpoint instance and foist it upon this node
+    def build_and_attach_node(endpoint_class, method_name)
+      endpoint_instance = endpoint_class.new(@requester, method_name, self)
+      self.instance_variable_set("@#{method_name}", endpoint_instance)
+      self.class.class_eval { define_method(method_name) { endpoint_instance } }
+      endpoint_instance
+    end
   end
 
 end
