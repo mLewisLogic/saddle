@@ -5,7 +5,7 @@ module Saddle
 
   class BaseEndpoint
 
-    attr_reader :relative_path, :parent
+    attr_reader :requester, :relative_path, :parent
 
     # Each endpoint needs to have a requester in order to ... make ... uh ... requests.
     def initialize(requester, relative_path=nil, parent=nil)

@@ -19,17 +19,6 @@ module Saddle
       self.build_tree(requester)
     end
 
-    # Options are passed down to the Requester.
-    # See saddle/requester.rb for available options.
-    def initialize(opt={})
-      @requester = Requester.new(
-        default_options.merge(opt)
-      )
-      if knows_root?
-        attach_endpoint_tree
-      end
-    end
-
 
     ### OVERRIDE THIS IF YOU WANT!
     #
@@ -82,7 +71,7 @@ module Saddle
       @@implementation_root
     end
 
-    def knows_root?
+    def self.knows_root?
       defined?(@@implementation_root)
     end
 

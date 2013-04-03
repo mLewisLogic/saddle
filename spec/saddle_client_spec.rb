@@ -20,7 +20,7 @@ describe Saddle::Client do
           ]
         }
       end
-      @client = Saddle.new(:stubs => stubs)
+      @client = Saddle::Client.create(:stubs => stubs)
     end
 
     it "should be able to request urlencoded" do

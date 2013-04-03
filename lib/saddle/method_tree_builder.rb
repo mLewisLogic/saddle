@@ -10,7 +10,7 @@ module Saddle::MethodTreeBuilder
   def build_tree(requester)
     root_node = build_root_node(requester)
     # If we have an 'endpoints' directory, build it out
-    if Dir.exists?(endpoints_directory)
+    if knows_root? && Dir.exists?(endpoints_directory)
       Dir["#{endpoints_directory}/**/*.rb"].each { |f| load(f) }
       build_node_children(self.endpoints_module, root_node, requester)
     end
@@ -20,16 +20,21 @@ module Saddle::MethodTreeBuilder
   # Build our root node here. The root node is special in that it lives below
   # the 'endpoints' directory, and so we need to manually check if it exists.
   def build_root_node(requester)
-    root_endpoint_file = File.join(
-      self.implementation_root,
-      'root_endpoint.rb'
-    )
-    if File.file?(root_endpoint_file)
-      # Load it and create our base endpoint
-      load(root_endpoint_file)
-      self.implementation_module::RootEndpoint.new(requester)
+    if knows_root?
+      root_endpoint_file = File.join(
+        self.implementation_root,
+        'root_endpoint.rb'
+      )
+      if File.file?(root_endpoint_file)
+        # Load it and create our base endpoint
+        load(root_endpoint_file)
+        self.implementation_module::RootEndpoint.new(requester)
+      else
+        # 'root_endpoint.rb' doesn't exist, so create a dummy endpoint
+        Saddle::BaseEndpoint.new(requester)
+      end
     else
-      # 'root_endpoint.rb' doesn't exist, so create a dummy endpoint
+      # we don't even have an implementation root, so create a dummy endpoint
       Saddle::BaseEndpoint.new(requester)
     end
   end
