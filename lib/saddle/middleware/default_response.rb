@@ -1,7 +1,8 @@
 require 'faraday'
 
 
-module SaddleMiddleware
+module Saddle::Middleware
+
   # Public: Returns a default response in the case of an exception
   # Expects default_response to be defined in the request of connection options, otherwise rethrows exception
   class DefaultResponse < Faraday::Middleware
@@ -19,4 +20,5 @@ module SaddleMiddleware
     end
 
   end
+
 end

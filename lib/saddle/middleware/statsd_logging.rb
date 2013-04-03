@@ -1,6 +1,7 @@
 require 'statsd'
 
-module SaddleMiddleware
+module Saddle::Middleware
+
   # Public: Wraps request with statsd logging
   # Expects statsd_path in request options.  However, if using saddle and no statsd_path is specified
   # will read call_chain and action and use them to construct a statsd_path
@@ -40,4 +41,5 @@ module SaddleMiddleware
     end
 
   end
+
 end

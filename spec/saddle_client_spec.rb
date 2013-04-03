@@ -1,6 +1,6 @@
 require 'saddle'
 
-describe Saddle do
+describe Saddle::Client do
 
   context "instance" do
     before :each do

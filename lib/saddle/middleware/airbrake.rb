@@ -1,7 +1,8 @@
 require 'faraday'
 
 
-module SaddleMiddleware
+module Saddle::Middleware
+
   # Public: Reports exceptions to airbrake
   #
   class Airbrake < Faraday::Middleware
@@ -25,4 +26,5 @@ module SaddleMiddleware
     end
 
   end
+
 end

@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
     A generic client wrapper for building service-specific wrappers. Base functionality, meant to be extended to concrete implementations.
   }
 
+  gem.add_dependency 'activesupport', '~> 3.2.13'
   gem.add_dependency 'faraday', '~> 0.8.6'
   gem.add_dependency 'faraday_middleware', '~> 0.9.0'
 end

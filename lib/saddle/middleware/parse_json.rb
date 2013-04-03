@@ -1,7 +1,8 @@
 require 'faraday_middleware/response_middleware'
 
 
-module SaddleMiddleware
+module Saddle::Middleware
+
 # Public: Parse response bodies as JSON.
   class ParseJson < FaradayMiddleware::ResponseMiddleware
     MIME_TYPE = 'application/json'.freeze
@@ -31,4 +32,5 @@ module SaddleMiddleware
     end
 
   end
+
 end
