@@ -1,6 +1,12 @@
 
 
 
+# This base endpoint is wast all implementation endpoints should inherit from.
+# It automatically provides tree construction and traversal functionality.
+# It also abstracts away url construction and requests to the underlying
+# requester instance.
+
+
 module Saddle
 
   class BaseEndpoint

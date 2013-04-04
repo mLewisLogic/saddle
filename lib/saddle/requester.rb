@@ -3,6 +3,12 @@ require 'faraday_middleware'
 
 require 'saddle/middleware/default_response'
 require 'saddle/middleware/parse_json'
+require 'saddle/middleware/ruby_timeout'
+
+
+
+# The requester handles setting up the network connecting and brokering
+# requests.
 
 
 module Saddle
@@ -39,12 +45,10 @@ module Saddle
       unless @timeout.nil?
         raise ':timeout must be a number or nil' unless @timeout.is_a?(Numeric)
       end
-      @additional_middleware = opt[:additional_middleware] || []
-      raise ':additional_middleware must be an Array' unless @additional_middleware.is_a?(Array)
-      raise 'invalid middleware found' unless @additional_middleware.all? { |m| m[:klass] < Faraday::Middleware }
-      raise 'middleware arguments must be an array' unless @additional_middleware.all? { |m| m[:args].nil? || m[:args].is_a?(Array) }
-      @use_ssl = opt[:use_ssl] || false
-      raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
+      @additional_middlewares = opt[:additional_middlewares] || []
+      raise ':additional_middleware must be an Array' unless @additional_middlewares.is_a?(Array)
+      raise 'invalid middleware found' unless @additional_middlewares.all? { |m| m[:klass] < Faraday::Middleware }
+      raise 'middleware arguments must be an array' unless @additional_middlewares.all? { |m| m[:args].nil? || m[:args].is_a?(Array) }
       @stubs = opt[:stubs] || nil
       unless @stubs.nil?
         raise ':stubs must be a Faraday::Adapter::Test::Stubs' unless @stubs.is_a?(Faraday::Adapter::Test::Stubs)
@@ -120,7 +124,7 @@ module Saddle
         builder.use Saddle::Middleware::DefaultResponse
 
         # Apply additional implementation-specific middlewares
-        @additional_middleware.each do |m|
+        @additional_middlewares.each do |m|
           builder.use m[:klass], *m[:args]
         end
 

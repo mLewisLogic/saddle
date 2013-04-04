@@ -4,6 +4,12 @@ require 'saddle/base_endpoint'
 
 
 
+# This mixin provides functionality for the construction of the endpoint
+# tree. It will start at the root directory and namespace of the client
+# implementation. It will then load the 'endpoints' directory and
+# build the endpoint tree based upon module/class namespaces
+
+
 module Saddle::MethodTreeBuilder
 
   # Build out the endpoint structure from the root of the implementation
@@ -17,12 +23,13 @@ module Saddle::MethodTreeBuilder
     root_node
   end
 
+
   # Build our root node here. The root node is special in that it lives below
   # the 'endpoints' directory, and so we need to manually check if it exists.
   def build_root_node(requester)
     if knows_root?
       root_endpoint_file = File.join(
-        self.implementation_root,
+        @@implementation_root,
         'root_endpoint.rb'
       )
       if File.file?(root_endpoint_file)
@@ -38,6 +45,7 @@ module Saddle::MethodTreeBuilder
       Saddle::BaseEndpoint.new(requester)
     end
   end
+
 
   # Build out the traversal tree by module namespace
   def build_node_children(current_module, current_node, requester)
@@ -66,12 +74,16 @@ module Saddle::MethodTreeBuilder
   end
 
 
+  # Get the module that the client implementation belongs to. This will act
+  # as the root namespace for endpoint traversal and construction
   def implementation_module
     ::ActiveSupport::Inflector.constantize(
       self.name.split('::')[0..-2].join('::')
     )
   end
 
+  # Get the Endpoints module that lives within this implementation's
+  # namespace
   def endpoints_module
     implementation_module.const_get('Endpoints')
   end
@@ -79,7 +91,22 @@ module Saddle::MethodTreeBuilder
   # Get the path to the 'endpoints' directory, based upon the client
   # class that inherited Saddle
   def endpoints_directory
-    File.join(self.implementation_root, 'endpoints')
+    File.join(@@implementation_root, 'endpoints')
   end
 
+
+
+  # When Saddle is inherited, we store the root of the implementation class
+  # This is so that we know where to look for relative files, like
+  # the endpoints directory
+  def inherited(obj)
+    path, = caller[0].partition(":")
+    @@implementation_root = File.dirname(path)
+  end
+
+  # If this client was not fully constructed, it may not even have an
+  # implementation root. Allow that behavior and avoid firesystem searching.
+  def knows_root?
+    defined?(@@implementation_root)
+  end
 end
