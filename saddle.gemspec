@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.summary       = %q{
     A generic client wrapper for building service-specific wrappers. Base functionality, meant to be extended to concrete implementations.
   }
-  s.homepage    = 'https://github.com/mLewisLogic/saddle'
+  s.homepage      = 'https://github.com/mLewisLogic/saddle'
+  s.license       = 'MIT'
 
   s.add_dependency 'activesupport', '~> 3.2.13'
   s.add_dependency 'faraday', '~> 0.8.6'
