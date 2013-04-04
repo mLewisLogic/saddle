@@ -4,10 +4,10 @@
 
 module Saddle
 
-  # This base endpoint is wast all implementation endpoints should inherit from.
-  # It automatically provides tree construction and traversal functionality.
-  # It also abstracts away url construction and requests to the underlying
-  # requester instance.
+  # This base endpoint is what all implementation endpoints should inherit
+  # from. It automatically provides tree construction and traversal
+  # functionality. It also abstracts away url construction and requests to
+  # the underlying requester instance.
 
   class BaseEndpoint
 
@@ -52,8 +52,10 @@ module Saddle
 
 
     # Get the url path for this endpoint/action combo
-    def path(action)
-      '/' + (path_array + [action]).join('/')
+    def path(action=nil)
+      paths = path_array
+      paths << action unless action.nil?
+      '/' + paths.join('/')
     end
 
     def path_array
@@ -78,6 +80,16 @@ module Saddle
       self.instance_variable_set("@#{method_name}", endpoint_instance)
       self.class.class_eval { define_method(method_name) { endpoint_instance } }
       endpoint_instance
+    end
+
+    # This will create a resource endpoint, based upon the parameters
+    # of this current node endpoint
+    def create_resource_endpoint(endpoint_class, resource_id)
+      endpoint_class.new(
+        @requester,
+        (path_array + [resource_id]).join('/')
+        # no parent so that it can free up memory
+      )
     end
   end
 
