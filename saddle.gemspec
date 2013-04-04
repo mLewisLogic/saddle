@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name          = 'saddle'
-  s.version       = '0.0.1'
+  s.version       = '0.0.2'
   s.authors       = ['Mike Lewis', 'Naseem Hakim']
   s.email         = 'mike@cleverkoala.com'
   s.description   = %q{Makes writing API clients as easy as giving high fives}
