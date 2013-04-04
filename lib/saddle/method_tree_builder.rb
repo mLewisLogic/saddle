@@ -1,6 +1,6 @@
 require 'active_support'
 
-require 'saddle/base_endpoint'
+require 'saddle/endpoint'
 
 
 
@@ -51,24 +51,25 @@ module Saddle::MethodTreeBuilder
   def build_node_children(current_module, current_node, requester)
     current_module.constants.each do |const_symbol|
       const = current_module.const_get(const_symbol)
-      case const
-        when Class
-          # A class means that it's a node
-          # Build out this endpoint on the current node
-          current_node.build_and_attach_node(
-            const,
-            ActiveSupport::Inflector.underscore(const_symbol)
-          )
-        when Module
-          # A module means that it's a branch
-          # Build the branch out with a base endpoint
-          branch_node = current_node.build_and_attach_node(
-            Saddle::BaseEndpoint,
-            ActiveSupport::Inflector.underscore(const_symbol)
-          )
-          # Build out the branch's endpoints on the new branch node
-          self.build_node_children(const, branch_node, requester)
-        else
+
+      if const.class == Module
+        # A module means that it's a branch
+        # Build the branch out with a base endpoint
+        branch_node = current_node.build_and_attach_node(
+          Saddle::BaseEndpoint,
+          ActiveSupport::Inflector.underscore(const_symbol)
+        )
+        # Build out the branch's endpoints on the new branch node
+        self.build_node_children(const, branch_node, requester)
+      end
+
+      if const < Saddle::TraversalEndpoint
+        # A class means that it's a node
+        # Build out this endpoint on the current node
+        current_node.build_and_attach_node(
+          const,
+          ActiveSupport::Inflector.underscore(const_symbol)
+        )
       end
     end
   end

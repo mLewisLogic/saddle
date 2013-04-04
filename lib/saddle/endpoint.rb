@@ -1,13 +1,13 @@
 
 
 
-# This base endpoint is wast all implementation endpoints should inherit from.
-# It automatically provides tree construction and traversal functionality.
-# It also abstracts away url construction and requests to the underlying
-# requester instance.
-
 
 module Saddle
+
+  # This base endpoint is wast all implementation endpoints should inherit from.
+  # It automatically provides tree construction and traversal functionality.
+  # It also abstracts away url construction and requests to the underlying
+  # requester instance.
 
   class BaseEndpoint
 
@@ -80,5 +80,17 @@ module Saddle
       endpoint_instance
     end
   end
+
+
+
+
+  # This endpoint will be automatically constructed into the node
+  # traversal tree.
+  class TraversalEndpoint < BaseEndpoint; end
+
+
+  # This endpoint is used for constructing resource-style endpoints. This
+  # means it will NOT be automatically added into the traversal tree.
+  class ResourceEndpoint < BaseEndpoint; end
 
 end
