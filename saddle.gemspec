@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
+require File.expand_path('../lib/saddle/version', __FILE__)
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name          = 'saddle'
-  s.version       = '0.0.2'
+  s.version       = Saddle::VERSION
   s.authors       = ['Mike Lewis', 'Naseem Hakim']
   s.email         = 'mike@cleverkoala.com'
   s.description   = %q{Makes writing API clients as easy as giving high fives}
