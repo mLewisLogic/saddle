@@ -5,6 +5,9 @@
 # RVM
 .rvmrc
 
+# Gems
+*.gem
+
 # IDEs
 .idea
 .project
