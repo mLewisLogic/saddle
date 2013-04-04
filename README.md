@@ -36,7 +36,4 @@ For an example of a concrete implementation, see [saddle-example](https://github
 ## todo
 * xml posting
 * xml parsing
-* resource-style routing
-* base endpoints
 * clean up custom middleware loading interface
-* load onto rubygems
