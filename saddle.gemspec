@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/mLewisLogic/saddle'
   s.license       = 'MIT'
 
-  s.add_dependency 'activesupport', '~> 3.2.13'
+  s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'faraday', '~> 0.8.6'
   s.add_dependency 'faraday_middleware', '~> 0.9.0'
 end
