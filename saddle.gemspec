@@ -7,6 +7,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 Gem::Specification.new do |s|
   s.name          = 'saddle'
   s.version       = Saddle::VERSION
+
   s.authors       = ['Mike Lewis', 'Naseem Hakim']
   s.email         = 'mike@cleverkoala.com'
   s.description   = %q{Makes writing API clients as easy as giving high fives}
@@ -15,6 +16,11 @@ Gem::Specification.new do |s|
   }
   s.homepage      = 'https://github.com/mLewisLogic/saddle'
   s.license       = 'MIT'
+
+  s.require_path  = 'lib'
+  s.files         = `git ls-files`.split($\)
+  s.executables   = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'faraday', '~> 0.8.6'
