@@ -114,7 +114,7 @@ module Saddle
         end
 
         # Support default return values upon exception
-        builder.use Saddle::Middleware::DefaultResponse
+        builder.use Saddle::Middleware::Response::DefaultResponse
 
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|
@@ -130,7 +130,6 @@ module Saddle
 
         # Automatic retries
         builder.request :retry, @num_retries if @num_retries
-
 
         # Handle parsing out the response if it's JSON
         builder.use Saddle::Middleware::Response::ParseJson
