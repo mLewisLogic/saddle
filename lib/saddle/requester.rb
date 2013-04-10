@@ -2,6 +2,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 require 'saddle/middleware/request/encode_json'
+require 'saddle/middleware/request/retry'
 require 'saddle/middleware/request/url_encoded'
 require 'saddle/middleware/response/default_response'
 require 'saddle/middleware/response/parse_json'
@@ -108,9 +109,8 @@ module Saddle
         # Config options
         unless @timeout.nil?
           builder.options[:timeout] = @timeout
-          builder.options[:saddle] = {
-            :request_style => @request_style,
-          }
+          builder.options[:request_style] = @request_style
+          builder.options[:num_retries] = @num_retries
         end
 
         # Support default return values upon exception
@@ -129,13 +129,13 @@ module Saddle
         builder.use Saddle::Middleware::Request::UrlEncoded
 
         # Automatic retries
-        builder.request :retry, @num_retries if @num_retries
+        builder.use Saddle::Middleware::Request::Retry
 
         # Handle parsing out the response if it's JSON
         builder.use Saddle::Middleware::Response::ParseJson
 
         # Raise exceptions on 4xx and 5xx errors
-        builder.response :raise_error
+        builder.use Faraday::Response::RaiseError
 
         # Set up our adapter
         if @stubs.nil?

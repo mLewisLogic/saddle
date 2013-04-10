@@ -1,5 +1,7 @@
 require 'faraday'
 
+
+
 module Saddle::Middleware
   module Response
 

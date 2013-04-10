@@ -11,8 +11,8 @@ module Saddle::Middleware
     class AirbrakeLogger < Faraday::Middleware
 
       def initialize(app, airbrake_api_key=nil)
-        @airbrake_api_key = airbrake_api_key
         super(app)
+        @airbrake_api_key = airbrake_api_key
       end
 
       def call(env)
