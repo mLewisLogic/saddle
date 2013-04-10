@@ -1,8 +1,10 @@
 require 'faraday'
 require 'faraday_middleware'
 
-require 'saddle/middleware/default_response'
-require 'saddle/middleware/parse_json'
+require 'saddle/middleware/request/encode_json'
+require 'saddle/middleware/request/url_encoded'
+require 'saddle/middleware/response/default_response'
+require 'saddle/middleware/response/parse_json'
 require 'saddle/middleware/ruby_timeout'
 
 
@@ -21,8 +23,7 @@ module Saddle
     ## host - host to connect to (default: localhost)
     ## port - port to connect on (default: 80)
     ## use_ssl - true if we should use https (default: false)
-    ## post_style - :json or :urlencoded (default: :json)
-    ## response_style - :json or :urlencoded (default: :json)
+    ## request_style - :json or :urlencoded (default: :json)
     ## num_retries - number of times to retry each request (default: 3)
     ## timeout - timeout in seconds
     ## additional_middleware - an Array of more middlewares to apply to the top of the stack
@@ -35,10 +36,8 @@ module Saddle
       raise ':port must be an integer' unless @port.is_a?(Fixnum)
       @use_ssl = opt[:use_ssl] || false
       raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
-      @post_style = opt[:post_style] || :json
-      raise ":post_style must be in: #{VALID_BODY_STYLES.join(',')}" unless VALID_BODY_STYLES.include?(@post_style)
-      @response_style = opt[:response_style] || :json
-      raise ":response_style must be in: #{VALID_BODY_STYLES.join(',')}" unless VALID_BODY_STYLES.include?(@response_style)
+      @request_style = opt[:request_style] || :json
+      raise ":request_style must be in: #{VALID_BODY_STYLES.join(',')}" unless VALID_BODY_STYLES.include?(@request_style)
       @num_retries = opt[:num_retries] || 3
       raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
       @timeout = opt[:timeout]
@@ -65,33 +64,24 @@ module Saddle
       response.body
     end
 
-    # Handle request logic for PUT or POST
-    def post_or_put(f, url, params={}, options={})
-      response = connection.send(f) do |req|
+    # Make a POST request
+    def post(url, data={}, options={})
+      response = connection.post do |req|
         req.options.merge! options
         req.url url
-        # Handle different supported post styles
-        case @post_style
-          when :json
-            req.headers['Content-Type'] = 'application/json'
-            req.body = params.to_json
-          when :urlencoded
-            req.params = params
-          else
-            raise RuntimeError(":post_style must be one of: #{VALID_POST_STYLES.join(',')}")
-        end
+        req.body = data
       end
       response.body
     end
 
-    # Make a POST request
-    def post(url, params={}, options={})
-      post_or_put(:post, url, params, options)
-    end
-
     # Make a PUT request
-    def put(url, params={}, options={})
-      post_or_put(:put, url, params, options)
+    def put(url, data={}, options={})
+      response = connection.put do |req|
+        req.options.merge! options
+        req.url url
+        req.body = data
+      end
+      response.body
     end
 
     # Make a DELETE request
@@ -118,6 +108,9 @@ module Saddle
         # Config options
         unless @timeout.nil?
           builder.options[:timeout] = @timeout
+          builder.options[:saddle] = {
+            :request_style => @request_style,
+          }
         end
 
         # Support default return values upon exception
@@ -131,12 +124,19 @@ module Saddle
         # Hard timeout on the entire request
         builder.use Saddle::Middleware::RubyTimeout
 
-        # Support multi-part encoding if there is a file attached
-        builder.request :multipart
-        # Handle retries
-        if @num_retries
-          builder.request :retry, @num_retries
-        end
+        # Request encoding
+        builder.use Saddle::Middleware::Request::JsonEncoded
+        builder.use Saddle::Middleware::Request::UrlEncoded
+
+        # Automatic retries
+        builder.request :retry, @num_retries if @num_retries
+
+
+        # Handle parsing out the response if it's JSON
+        builder.use Saddle::Middleware::Response::ParseJson
+
+        # Raise exceptions on 4xx and 5xx errors
+        builder.response :raise_error
 
         # Set up our adapter
         if @stubs.nil?
@@ -146,11 +146,6 @@ module Saddle
           # Use the test adapter
           builder.adapter :test, @stubs
         end
-
-        # Raise exceptions on 4xx and 5xx errors
-        builder.response :raise_error
-        # Handle parsing out the response if it's JSON
-        builder.use Saddle::Middleware::ParseJson
       end
     end
 

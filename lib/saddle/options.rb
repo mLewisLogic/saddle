@@ -13,8 +13,7 @@ module Saddle::Options
       :host => host,
       :port => port,
       :use_ssl => use_ssl,
-      :post_style => post_style,
-      :response_style => response_style,
+      :request_style => request_style,
       :num_retries => num_retries,
       :timeout => timeout,
       :additional_middlewares => additional_middlewares,
@@ -39,13 +38,7 @@ module Saddle::Options
 
   # The POST/PUT style for this client
   # options are [:json, :urlencoded]
-  def post_style
-    :json
-  end
-
-  # How to parse results
-  # options are [:json, :urlencoded]
-  def response_style
+  def request_style
     :json
   end
 
