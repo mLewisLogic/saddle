@@ -16,7 +16,7 @@ module Saddle::Options
       :request_style => request_style,
       :num_retries => num_retries,
       :timeout => timeout,
-      :additional_middlewares => additional_middlewares,
+      :additional_middlewares => @@additional_middlewares,
       :stubs => stubs,
     }
   end
@@ -52,17 +52,18 @@ module Saddle::Options
     30
   end
 
-  # Override this to add additional middleware to the request stack
+  # Use this to add additional middleware to the request stack
   # ex:
-  #
-  # require 'my_middleware'
-  # def self.default_middleware
-  #   [MyMiddleware]
+  # add_middleware({
+  #   :klass => MyMiddleware,
+  #   :args => [arg1, arg2],
+  # })
   # end
   #
   ###
-  def additional_middlewares
-    []
+  @@additional_middlewares = []
+  def add_middleware m
+    @@additional_middlewares << m
   end
 
   # If the Typhoeus adapter is being used, pass stubs to it for testing.
