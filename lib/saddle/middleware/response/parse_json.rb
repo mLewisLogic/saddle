@@ -15,14 +15,15 @@ module Saddle::Middleware
       end
 
       def call(env)
+        result = @app.call env
         if parse_response?(env)
           # Make sure we're working with a valid body that's not a String
-          if env.body and !env.body.respond_to?(:to_str)
+          if env[:body] && env[:body].respond_to?(:to_str)
             env[:request_headers][CONTENT_TYPE] ||= MIME_TYPE
-            env.body = ::JSON.dump env.body
+            env[:body] = ::JSON.parse env[:body]
           end
         end
-        @app.call env
+        result
       end
 
       def parse_response?(env)
