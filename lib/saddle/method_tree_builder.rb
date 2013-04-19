@@ -1,7 +1,6 @@
 require 'active_support'
 
 require 'saddle/endpoint'
-require 'saddle/implementation_root'
 
 
 
@@ -94,15 +93,6 @@ module Saddle::MethodTreeBuilder
   # class that inherited Saddle
   def endpoints_directory
     File.join(self.implementation_root, 'endpoints')
-  end
-
-
-
-  # When Saddle is inherited, we store the root of the implementation class
-  # This is so that we know where to look for relative files, like
-  # the endpoints directory
-  def inherited(obj)
-    obj.send(:include, Saddle::ImplementationRoot)
   end
 
   # If this client was not fully constructed, it may not even have an

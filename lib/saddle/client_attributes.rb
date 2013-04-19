@@ -1,7 +1,10 @@
-module Saddle::ImplementationRoot
+module Saddle::ClientAttributes
 
   def self.included(obj)
     obj.extend ClassMethods
+
+    # Default values
+    obj.additional_middlewares = []
 
     # We know that this module is included when saddle client is inherited,
     # so we're actually interested in the path of the caller two levels deep.
@@ -11,6 +14,7 @@ module Saddle::ImplementationRoot
 
   module ClassMethods
     attr_accessor :implementation_root
+    attr_accessor :additional_middlewares
   end
 
 end

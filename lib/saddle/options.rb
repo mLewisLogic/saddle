@@ -16,7 +16,7 @@ module Saddle::Options
       :request_style => request_style,
       :num_retries => num_retries,
       :timeout => timeout,
-      :additional_middlewares => @@additional_middlewares,
+      :additional_middlewares => self.additional_middlewares,
       :stubs => stubs,
     }
   end
@@ -60,10 +60,9 @@ module Saddle::Options
   # })
   # end
   #
-  ###
-  @@additional_middlewares = []
+  ###  
   def add_middleware m
-    @@additional_middlewares << m
+    self.additional_middlewares << m
   end
 
   # If the Typhoeus adapter is being used, pass stubs to it for testing.

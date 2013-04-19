@@ -1,5 +1,6 @@
 require 'saddle/method_tree_builder'
 require 'saddle/options'
+require 'saddle/client_attributes'
 require 'saddle/requester'
 
 
@@ -16,7 +17,6 @@ module Saddle
     extend MethodTreeBuilder
     extend Options
 
-
     # Once your implementation is written, this is the magic you need to
     # create a client instance.
     def self.create(opt={})
@@ -26,6 +26,10 @@ module Saddle
         )
       )
     end
+
+    def self.inherited(obj)
+      obj.send(:include, Saddle::ClientAttributes)
+    end    
 
   end
 
