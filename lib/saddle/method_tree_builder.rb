@@ -1,6 +1,7 @@
 require 'active_support'
 
 require 'saddle/endpoint'
+require 'saddle/implementation_root'
 
 
 
@@ -29,7 +30,7 @@ module Saddle::MethodTreeBuilder
   def build_root_node(requester)
     if knows_root?
       root_endpoint_file = File.join(
-        @@implementation_root,
+        self.implementation_root,
         'root_endpoint.rb'
       )
       if File.file?(root_endpoint_file)
@@ -92,7 +93,7 @@ module Saddle::MethodTreeBuilder
   # Get the path to the 'endpoints' directory, based upon the client
   # class that inherited Saddle
   def endpoints_directory
-    File.join(@@implementation_root, 'endpoints')
+    File.join(self.implementation_root, 'endpoints')
   end
 
 
@@ -101,13 +102,12 @@ module Saddle::MethodTreeBuilder
   # This is so that we know where to look for relative files, like
   # the endpoints directory
   def inherited(obj)
-    path, = caller[0].partition(":")
-    @@implementation_root = File.dirname(path)
+    obj.send(:include, Saddle::ImplementationRoot)
   end
 
   # If this client was not fully constructed, it may not even have an
   # implementation root. Allow that behavior and avoid firesystem searching.
   def knows_root?
-    defined?(@@implementation_root)
+    defined?(self.implementation_root)
   end
 end
