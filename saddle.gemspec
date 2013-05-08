@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email         = 'mike@cleverkoala.com'
   s.description   = %q{Makes writing API clients as easy as giving high fives}
   s.summary       = %q{
-    A generic client wrapper for building service-specific wrappers. Base functionality, meant to be extended to concrete implementations.
+    A full-featured, generic consumer layer for you to build API client implementations with.
   }
   s.homepage      = 'https://github.com/mLewisLogic/saddle'
   s.license       = 'MIT'
@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency 'activesupport', '>= 3.0'
-  s.add_dependency 'faraday', '~> 0.8.6'
+  s.add_dependency 'faraday', '~> 0.8.7'
   s.add_dependency 'faraday_middleware', '~> 0.9.0'
 end
