@@ -41,14 +41,16 @@ Saddle enables you to create beautifully stable and functionaly API clients, in 
 [saddle-example](https://github.com/mLewisLogic/saddle-example)
 
 ### client construction
-0. For the sake of cleanliness, pick a namespace that everything related to your client should live in. For this example, we'll use _SaddleExample_.
-1. Inherit your client class (_SaddleExample::Client_)from _Saddle::Client_
+0. For the sake of cleanliness, pick a namespace that everything related to your client should live in. For this example, we'll use __SaddleExample__
+1. Inherit your client class, __SaddleExample::Client__, from __Saddle::Client__
 2. Create an _endpoints_ directory at the same level as your client class file
-3. Create endpoint classes in the _endpoints_ directory that inherit from _Saddle::TraversalEndpoint_ and are under the _SaddleExample::Endpoints_ namespace module
+3. Create endpoint classes in the _endpoints_ directory that inherit from __Saddle::TraversalEndpoint__ and are under the __SaddleExample::Endpoints__ namespace module
     1. Give these endpoints methods that call _get_ or _post_ to perform the actual request
-    2. Their module/class namespace determines how they are accessed in the client's call tree. For example, the get_all() in _SaddleExample::Endpoints::Fish::Guppy_ would be accessed by:
+    2. Their module/class namespace determines how they are accessed in the client's call tree. For example, the get\_all() in __SaddleExample::Endpoints::Fish::Guppy__ would be accessed by:
 
         client.fish.guppy.get_all()
+
+    3. If you need REST style endpoints like client.fish('guppy').catch() then check out __Saddle::ResourceEndpoint__ and how it's used in [saddle-example](https://github.com/mLewisLogic/saddle-example/blob/master/lib/endpoints/kitten.rb)
 
 4. Initialize an instance of your client. ex:
 
