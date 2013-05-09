@@ -28,15 +28,17 @@ module Saddle::Middleware
       end
 
       def call(env)
+        # Try to build up a path for the STATSD logging
         statsd_path = nil
         if env[:request][:statsd_path]
           statsd_path = env[:request][:statsd_path]
         elsif env[:request][:saddle] && env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
-          statsd_path = (env[:request][:saddle][:call_chain] + [env[:request][:saddle][:action]]).join('.')
+          statsd_path = (['saddle'] + env[:request][:saddle][:call_chain] + [env[:request][:saddle][:action]]).join('.')
         end
 
+        # If we have a path, wrap the ensuing app call in STATSD timing
         if statsd_path
-          self.statsd.time statsd_path do
+          self.statsd.time(statsd_path) do
             @app.call(env)
           end
         else
