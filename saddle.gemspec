@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.name          = 'saddle'
   s.version       = Saddle::VERSION
 
-  s.authors       = ['Mike Lewis', 'Naseem Hakim']
-  s.email         = 'mike@cleverkoala.com'
+  s.authors       = ['Mike Lewis']
+  s.email         = 'mike.lewis@airbnb.com'
   s.description   = %q{Makes writing API clients as easy as giving high fives}
   s.summary       = %q{
     A full-featured, generic consumer layer for you to build API client implementations with.
