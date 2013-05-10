@@ -10,5 +10,5 @@ group :test do
   gem 'rspec-instafail', '~> 0.2'
 
   gem 'airbrake'
-  gem 'statsd-ruby'
+  gem 'statsd-ruby', :require => ['statsd']
 end
