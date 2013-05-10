@@ -1,7 +1,3 @@
-
-
-
-
 module Saddle
 
   # This base endpoint is what all implementation endpoints should inherit

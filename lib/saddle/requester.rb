@@ -15,7 +15,6 @@ require 'saddle/middleware/ruby_timeout'
 
 
 module Saddle
-
   class Requester
 
     VALID_BODY_STYLES = [:json, :urlencoded]
@@ -149,5 +148,4 @@ module Saddle
     end
 
   end
-
 end

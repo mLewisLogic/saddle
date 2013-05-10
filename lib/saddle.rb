@@ -15,6 +15,10 @@ module Saddle
     extend MethodTreeBuilder
     extend Options
 
+    class << self
+      attr_accessor :additional_middlewares
+    end
+
     # Once your implementation is written, this is the magic you need to
     # create a client instance.
     def self.create(opt={})
@@ -26,6 +30,13 @@ module Saddle
     end
 
     def self.inherited(obj)
+      # Clone the parent's additional_middlewares
+      obj.additional_middlewares = if defined?(obj.superclass.additional_middlewares)
+        (obj.superclass.additional_middlewares || []).clone
+      else
+        []
+      end
+      # Add additional client attributes
       obj.send(:include, Saddle::ClientAttributes)
     end    
 
