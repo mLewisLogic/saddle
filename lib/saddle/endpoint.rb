@@ -1,3 +1,7 @@
+require 'active_support'
+
+
+
 module Saddle
 
   # This base endpoint is what all implementation endpoints should inherit
