@@ -31,7 +31,6 @@ module Saddle
 
         def call(env)
           # Try to build up a path for the STATSD logging
-          statsd_path = nil
           if env[:request][:statsd_path]
             statsd_path = env[:request][:statsd_path]
           elsif env[:request][:saddle]
@@ -41,6 +40,8 @@ module Saddle
               env[:request][:saddle][:call_chain] +
               [env[:request][:saddle][:action]]
             ).join('.')
+          else
+            statsd_path = "saddle.raw.#{env[:host].to_s}.#{env[:path].to_s}"
           end
 
           # If we have a path, wrap the ensuing app call in STATSD timing
