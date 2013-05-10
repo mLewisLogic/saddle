@@ -1,11 +1,9 @@
+require 'saddle/client_attributes'
 require 'saddle/method_tree_builder'
 require 'saddle/options'
-require 'saddle/client_attributes'
 require 'saddle/requester'
-require 'saddle/errors'
 
 
-# Ghost ride the whip.
 # Inherit your client implementation from Saddle::Client
 # then call YourCrayClient.create to get a client instance.
 
