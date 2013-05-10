@@ -33,8 +33,13 @@ module Saddle
           statsd_path = nil
           if env[:request][:statsd_path]
             statsd_path = env[:request][:statsd_path]
-          elsif env[:request][:saddle] && env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
-            statsd_path = (['saddle'] + env[:request][:saddle][:call_chain] + [env[:request][:saddle][:action]]).join('.')
+          elsif env[:request][:saddle]
+            statsd_path = (
+              ['saddle'] +
+              env[:request][:saddle][:client_name] +
+              env[:request][:saddle][:call_chain] +
+              [env[:request][:saddle][:action]]
+            ).join('.')
           end
 
           # If we have a path, wrap the ensuing app call in STATSD timing

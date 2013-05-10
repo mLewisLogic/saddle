@@ -13,7 +13,7 @@ module Saddle
     def initialize(requester, relative_path=nil, parent=nil)
       @requester = requester
       @relative_path = relative_path
-      @parent = parent.is_a?(BaseEndpoint) ? parent : nil
+      @parent = parent
     end
 
 
@@ -40,6 +40,7 @@ module Saddle
     def request(method, action, params={}, options={})
       # Augment in interesting options
       options[:saddle] = {
+        :client_name => self.client_name,
         :call_chain => path_array,
         :action => action,
       }
@@ -62,11 +63,25 @@ module Saddle
     def endpoint_chain
       chain = []
       node = self
-      until node.nil?
+      while node.is_a?(BaseEndpoint)
         chain << node
         node = node.parent
       end
       chain.reverse
+    end
+
+    # Traverse back until we find the original client
+    def client
+      node = self
+      while node.is_a?(BaseEndpoint)
+        node = node.parent
+      end
+      node
+    end
+
+    # Underscore name of the client
+    def client_name
+      ActiveSupport::Inflector.underscore(self.client.name.split('::')[-2])
     end
 
 
@@ -81,11 +96,7 @@ module Saddle
     # This will create a resource endpoint, based upon the parameters
     # of this current node endpoint
     def create_resource_endpoint(endpoint_class, resource_id)
-      endpoint_class.new(
-        @requester,
-        (path_array + [resource_id]).join('/')
-        # no parent so that it can free up memory
-      )
+      endpoint_class.new(@requester, resource_id, self)
     end
   end
 
