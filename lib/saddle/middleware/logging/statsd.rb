@@ -37,7 +37,7 @@ module Saddle
           elsif env[:request][:saddle]
             statsd_path = (
               ['saddle'] +
-              env[:request][:saddle][:client_name] +
+              [env[:request][:saddle][:client_name]] +
               env[:request][:saddle][:call_chain] +
               [env[:request][:saddle][:action]]
             ).join('.')
