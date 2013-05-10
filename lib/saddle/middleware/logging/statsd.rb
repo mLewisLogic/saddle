@@ -25,6 +25,7 @@ module Saddle
           @statsd ||= begin
             client = ::Statsd.new(@graphite_host, @graphite_port)
             client.namespace = @namespace if @namespace
+            client
           end
         end
 
