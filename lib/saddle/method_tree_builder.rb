@@ -36,6 +36,7 @@ module Saddle
         if File.file?(root_endpoint_file)
           # Load it and create our base endpoint
           load(root_endpoint_file)
+          # RootEndpoint is the special class name for a root endpoint
           root_node_class = self.implementation_module::RootEndpoint
         else
           # 'root_endpoint.rb' doesn't exist, so create a dummy endpoint
