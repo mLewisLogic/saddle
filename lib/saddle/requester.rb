@@ -34,6 +34,8 @@ module Saddle
       raise ':host must be a string' unless @host.is_a?(String)
       @port = opt[:port] || 80
       raise ':port must be an integer' unless @port.is_a?(Fixnum)
+      @path_prefix = opt[:path_prefix] || ''
+      raise ':path_prefix must be a string' unless @path_prefix.is_a?(String)
       @use_ssl = opt[:use_ssl] || false
       raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
       @request_style = opt[:request_style] || :json
@@ -41,9 +43,7 @@ module Saddle
       @num_retries = opt[:num_retries] || 3
       raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
       @timeout = opt[:timeout]
-      unless @timeout.nil?
-        raise ':timeout must be a number or nil' unless @timeout.is_a?(Numeric)
-      end
+      raise ':timeout must be nil or an integer' unless (@timeout.nil? || @timeout.is_a?(Numeric))
       @additional_middlewares = opt[:additional_middlewares] || []
       raise ':additional_middleware must be an Array' unless @additional_middlewares.is_a?(Array)
       raise 'invalid middleware found' unless @additional_middlewares.all? { |m| m[:klass] < Faraday::Middleware }
@@ -99,7 +99,7 @@ module Saddle
 
     # Construct a base url using this requester's settings
     def base_url
-      "http#{'s' if @use_ssl}://#{@host}:#{@port}"
+      "http#{'s' if @use_ssl}://#{@host}:#{@port}/#{@path_prefix}"
     end
 
     # Build a connection instance, wrapped in the middleware that we want

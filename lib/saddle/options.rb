@@ -9,6 +9,7 @@ module Saddle
       {
         :host => host,
         :port => port,
+        :path_prefix => path_prefix,
         :use_ssl => use_ssl,
         :request_style => request_style,
         :num_retries => num_retries,
@@ -26,6 +27,11 @@ module Saddle
     # The default port for this client
     def port
       80
+    end
+
+    # A string prefix to prepend to paths as they are build (ie, 'v1')
+    def path_prefix
+      ''
     end
 
     # Should this client use SSL by default?
