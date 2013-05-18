@@ -58,7 +58,7 @@ module Saddle
         if const.class == Module
           # A module means that it's a branch
           # Build the branch out with a base endpoint
-          branch_node = current_node.build_and_attach_node(
+          branch_node = current_node._build_and_attach_node(
             Saddle::BaseEndpoint,
             ActiveSupport::Inflector.underscore(const_symbol)
           )
@@ -69,10 +69,7 @@ module Saddle
         if const < Saddle::TraversalEndpoint
           # A class means that it's a node
           # Build out this endpoint on the current node
-          current_node.build_and_attach_node(
-            const,
-            ActiveSupport::Inflector.underscore(const_symbol)
-          )
+          current_node._build_and_attach_node(const)
         end
       end
     end
