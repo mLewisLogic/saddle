@@ -69,8 +69,8 @@ module Saddle
 
     def _request(method, action, params={}, options={})
       # Augment in interesting options
+      options[:saddle] ||= {}
       options[:saddle] = {
-        :client_name => _client_name(),
         :call_chain => _path_array(),
         :action => action,
       }
@@ -98,20 +98,6 @@ module Saddle
         node = node.parent
       end
       chain.reverse()
-    end
-
-    # Traverse back until we find the original client
-    def _client
-      node = self
-      while node.is_a?(BaseEndpoint)
-        node = node.parent
-      end
-      node
-    end
-
-    # Underscore name of the client
-    def _client_name
-      ActiveSupport::Inflector.underscore(self._client.name.split('::')[-2])
     end
 
     # If the parent is not an endpoint, it is a root node

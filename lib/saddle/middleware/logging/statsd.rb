@@ -34,17 +34,21 @@ module Saddle
           if env[:request][:statsd_path]
             statsd_path = env[:request][:statsd_path]
           elsif env[:request][:saddle]
-            statsd_path = (
-              ['saddle'] +
-              [env[:request][:saddle][:client_name]] +
-              env[:request][:saddle][:call_chain] +
-              [env[:request][:saddle][:action]]
-            ).join('.')
-          else
-            statsd_path = "saddle.raw.#{env[:host].to_s}.#{env[:path].to_s}"
+            statsd_path_components = [
+              'saddle',
+              ActiveSupport::Inflector.underscore(env[:request][:saddle][:client].name),
+            ]
+            if env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
+              statsd_path_components += env[:request][:saddle][:call_chain]
+              statsd_path_components << env[:request][:saddle][:action]
+            else
+              statsd_path_components << 'raw'
+              statsd_path_components << "#{env[:url].host}#{env[:url].path}"
+            end
+            statsd_path = statsd_path_components.join('.')
           end
 
-          # If we have a path, wrap the ensuing app call in STATSD timing
+          # If we have a path, wrap the call
           if statsd_path
             self.statsd.time(statsd_path) do
               @app.call(env)

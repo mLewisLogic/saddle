@@ -29,7 +29,9 @@ module Saddle
     ## additional_middleware - an Array of more middlewares to apply to the top of the stack
     ##                       - each middleware consists of hash of klass, and optionally args (an array)
     ## stubs - test stubs for specs
-    def initialize(opt={})
+    def initialize(parent_client, opt={})
+      # We may want properties about the parent client in middlewares
+      @parent_client = parent_client
       # Store the options for later use
       @options = opt
       @host = opt[:host] || 'localhost'
@@ -110,12 +112,20 @@ module Saddle
         # Include the requester level options
         builder.options[:client_options] = @options
 
+        # Include a saddle hash
+        builder.options[:saddle] = {
+          :client => @parent_client,
+        }
+
         # Config options
         unless @timeout.nil?
           builder.options[:timeout] = @timeout
           builder.options[:request_style] = @request_style
           builder.options[:num_retries] = @num_retries
         end
+
+        # Set up a user agent
+        builder.headers[:user_agent] = @parent_client.root_namespace
 
         # Support default return values upon exception
         builder.use(Saddle::Middleware::Response::DefaultResponse)

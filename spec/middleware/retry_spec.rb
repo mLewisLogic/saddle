@@ -1,5 +1,7 @@
 require 'saddle'
 
+
+
 describe Saddle::Client do
 
   context "retry requests" do
