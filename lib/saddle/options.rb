@@ -7,15 +7,15 @@ module Saddle
     # Construct our default options, based upon the class methods
     def default_options
       {
-        :host => host,
-        :port => port,
-        :path_prefix => path_prefix,
-        :use_ssl => use_ssl,
-        :request_style => request_style,
-        :num_retries => num_retries,
-        :timeout => timeout,
+        :host => host(),
+        :port => port(),
+        :path_prefix => path_prefix(),
+        :use_ssl => use_ssl(),
+        :request_style => request_style(),
+        :num_retries => num_retries(),
+        :timeout => timeout(),
         :additional_middlewares => self.additional_middlewares,
-        :stubs => stubs,
+        :stubs => stubs(),
       }
     end
 

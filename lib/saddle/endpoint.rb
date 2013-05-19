@@ -97,7 +97,7 @@ module Saddle
         chain << node
         node = node.parent
       end
-      chain.reverse
+      chain.reverse()
     end
 
     # Traverse back until we find the original client

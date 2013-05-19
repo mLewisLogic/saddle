@@ -113,36 +113,36 @@ module Saddle
         end
 
         # Support default return values upon exception
-        builder.use Saddle::Middleware::Response::DefaultResponse
+        builder.use(Saddle::Middleware::Response::DefaultResponse)
 
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|
-          builder.use m[:klass], *m[:args]
+          builder.use(m[:klass], *m[:args])
         end
 
         # Hard timeout on the entire request
-        builder.use Saddle::Middleware::RubyTimeout
+        builder.use(Saddle::Middleware::RubyTimeout)
 
         # Request encoding
-        builder.use Saddle::Middleware::Request::JsonEncoded
-        builder.use Saddle::Middleware::Request::UrlEncoded
+        builder.use(Saddle::Middleware::Request::JsonEncoded)
+        builder.use(Saddle::Middleware::Request::UrlEncoded)
 
         # Automatic retries
-        builder.use Saddle::Middleware::Request::Retry
+        builder.use(Saddle::Middleware::Request::Retry)
 
         # Handle parsing out the response if it's JSON
-        builder.use Saddle::Middleware::Response::ParseJson
+        builder.use(Saddle::Middleware::Response::ParseJson)
 
         # Raise exceptions on 4xx and 5xx errors
-        builder.use Faraday::Response::RaiseError
+        builder.use(Faraday::Response::RaiseError)
 
         # Set up our adapter
         if @stubs.nil?
           # Use the default adapter
-          builder.adapter :net_http
+          builder.adapter(:net_http)
         else
           # Use the test adapter
-          builder.adapter :test, @stubs
+          builder.adapter(:test, @stubs)
         end
       end
     end

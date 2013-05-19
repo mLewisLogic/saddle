@@ -96,7 +96,7 @@ module Saddle
     end
 
     # If this client was not fully constructed, it may not even have an
-    # implementation root. Allow that behavior and avoid firesystem searching.
+    # implementation root. Allow that behavior to avoid filesystem searching.
     def knows_root?
       defined?(self.implementation_root)
     end

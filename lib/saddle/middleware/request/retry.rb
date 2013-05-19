@@ -18,7 +18,7 @@ module Saddle
 
         def call(env)
           retries = env[:request][:num_retries] || 2
-          backoff = env[:request][:retry_backoff] || 0.050 # ms
+          backoff = env[:request][:retry_backoff] || 0.050 # in seconds
           begin
             @app.call(self.class.deep_copy(env))
           rescue => e
