@@ -30,6 +30,8 @@ module Saddle
     ##                       - each middleware consists of hash of klass, and optionally args (an array)
     ## stubs - test stubs for specs
     def initialize(opt={})
+      # Store the options for later use
+      @options = opt
       @host = opt[:host] || 'localhost'
       raise ':host must be a string' unless @host.is_a?(String)
       @port = opt[:port] || 80
@@ -58,8 +60,8 @@ module Saddle
     # Make a GET request
     def get(url, params={}, options={})
       response = connection.get do |req|
-        req.options.merge! options
-        req.url url, params
+        req.options.merge!(options)
+        req.url(url, params)
       end
       response.body
     end
@@ -67,8 +69,8 @@ module Saddle
     # Make a POST request
     def post(url, data={}, options={})
       response = connection.post do |req|
-        req.options.merge! options
-        req.url url
+        req.options.merge!(options)
+        req.url(url)
         req.body = data
       end
       response.body
@@ -77,8 +79,8 @@ module Saddle
     # Make a PUT request
     def put(url, data={}, options={})
       response = connection.put do |req|
-        req.options.merge! options
-        req.url url
+        req.options.merge!(options)
+        req.url(url)
         req.body = data
       end
       response.body
@@ -87,8 +89,8 @@ module Saddle
     # Make a DELETE request
     def delete(url, params={}, options={})
       response = connection.delete do |req|
-        req.options.merge! options
-        req.url url, params
+        req.options.merge!(options)
+        req.url(url, params)
       end
       response.body
     end
@@ -105,6 +107,9 @@ module Saddle
     # Build a connection instance, wrapped in the middleware that we want
     def connection
       @connection ||= Faraday.new(base_url) do |builder|
+        # Include the requester level options
+        builder.options[:client_options] = @options
+
         # Config options
         unless @timeout.nil?
           builder.options[:timeout] = @timeout
