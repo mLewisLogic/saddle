@@ -26,7 +26,7 @@ module Saddle
 
     # The default port for this client
     def port
-      80
+      nil
     end
 
     # A string prefix to prepend to paths as they are build (ie, 'v1')
@@ -54,6 +54,14 @@ module Saddle
     def timeout
       30
     end
+
+    # If you want to set up an ActiveSupport::Notification, give your client
+    #  an instrumentation key to monitor.
+    def instrumentation_key
+      nil
+    end
+
+
 
     # Use this to add additional middleware to the request stack
     # ex:

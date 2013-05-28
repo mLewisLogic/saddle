@@ -40,11 +40,11 @@ module Saddle
           root_node_class = self.implementation_module::RootEndpoint
         else
           # 'root_endpoint.rb' doesn't exist, so create a dummy endpoint
-          root_node_class = Saddle::BaseEndpoint
+          root_node_class = Saddle::TraversalEndpoint
         end
       else
         # we don't even have an implementation root, so create a dummy endpoint
-        root_node_class = Saddle::BaseEndpoint
+        root_node_class = Saddle::TraversalEndpoint
       end
       root_node_class.new(requester, nil, self)
     end
@@ -59,7 +59,7 @@ module Saddle
           # A module means that it's a branch
           # Build the branch out with a base endpoint
           branch_node = current_node._build_and_attach_node(
-            Saddle::BaseEndpoint,
+            Saddle::TraversalEndpoint,
             ActiveSupport::Inflector.underscore(const_symbol)
           )
           # Build out the branch's endpoints on the new branch node

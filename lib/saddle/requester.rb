@@ -2,6 +2,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 require 'saddle/middleware/request/encode_json'
+require 'saddle/middleware/request/path_prefix'
 require 'saddle/middleware/request/retry'
 require 'saddle/middleware/request/url_encoded'
 require 'saddle/middleware/response/default_response'
@@ -21,7 +22,7 @@ module Saddle
 
     # Available options
     ## host - host to connect to (default: localhost)
-    ## port - port to connect on (default: 80)
+    ## port - port to connect on
     ## use_ssl - true if we should use https (default: false)
     ## request_style - :json or :urlencoded (default: :json)
     ## num_retries - number of times to retry each request (default: 3)
@@ -36,10 +37,8 @@ module Saddle
       @options = opt
       @host = opt[:host] || 'localhost'
       raise ':host must be a string' unless @host.is_a?(String)
-      @port = opt[:port] || 80
-      raise ':port must be an integer' unless @port.is_a?(Fixnum)
-      @path_prefix = opt[:path_prefix] || ''
-      raise ':path_prefix must be a string' unless @path_prefix.is_a?(String)
+      @port = opt[:port]
+      raise ':port must be nil or an integer' unless (@port.nil? || @port.is_a?(Fixnum))
       @use_ssl = opt[:use_ssl] || false
       raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
       @request_style = opt[:request_style] || :json
@@ -103,7 +102,7 @@ module Saddle
 
     # Construct a base url using this requester's settings
     def base_url
-      "http#{'s' if @use_ssl}://#{@host}:#{@port}/#{@path_prefix}"
+      "http#{'s' if @use_ssl}://#{@host}#{":#{@port}" if @port}"
     end
 
     # Build a connection instance, wrapped in the middleware that we want
@@ -124,8 +123,11 @@ module Saddle
           builder.options[:num_retries] = @num_retries
         end
 
-        # Set up a user agent
+        # Set up a user agent (named for the client's namespace)
         builder.headers[:user_agent] = @parent_client.root_namespace
+
+        # Set up the path prefix if needed
+        builder.use(Saddle::Middleware::Request::PathPrefix)
 
         # Support default return values upon exception
         builder.use(Saddle::Middleware::Response::DefaultResponse)
@@ -150,6 +152,9 @@ module Saddle
 
         # Raise exceptions on 4xx and 5xx errors
         builder.use(Faraday::Response::RaiseError)
+
+        # Set up instrumentation around the adapter for extensibility
+        builder.use(FaradayMiddleware::Instrumentation)
 
         # Set up our adapter
         if @stubs.nil?
