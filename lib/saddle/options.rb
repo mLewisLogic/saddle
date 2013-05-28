@@ -31,7 +31,7 @@ module Saddle
 
     # A string prefix to prepend to paths as they are build (ie, 'v1')
     def path_prefix
-      ''
+      nil
     end
 
     # Should this client use SSL by default?
