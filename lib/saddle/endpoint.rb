@@ -20,24 +20,36 @@ module Saddle
       @relative_path = relative_path_override || _relative_path()
     end
 
+
+    # Generic request wrapper
+    def request(method, action, params={}, options={})
+      # Augment in interesting options
+      options[:saddle] ||= {}
+      options[:saddle] = {
+        :call_chain => _path_array(),
+        :action => action,
+      }
+      @requester.send(method, _path(action), params, options)
+    end
+
     # Provide GET functionality for the implementer class
     def get(action, params={}, options={})
-      _request(:get, action, params, options)
+      request(:get, action, params, options)
     end
 
     # Provide POST functionality for the implementer class
     def post(action, params={}, options={})
-      _request(:post, action, params, options)
+      request(:post, action, params, options)
     end
 
     # Provide PUT functionality for the implementer class
     def put(action, params={}, options={})
-      _request(:put, action, params, options)
+      request(:put, action, params, options)
     end
 
     # Provide DELETE functionality for the implementer class
     def delete(action, params={}, options={})
-      _request(:delete, action, params, options)
+      request(:delete, action, params, options)
     end
 
 
@@ -66,17 +78,6 @@ module Saddle
 
 
     protected
-
-    def _request(method, action, params={}, options={})
-      # Augment in interesting options
-      options[:saddle] ||= {}
-      options[:saddle] = {
-        :call_chain => _path_array(),
-        :action => action,
-      }
-      @requester.send(method, _path(action), params, options)
-    end
-
 
     # Get the url path for this endpoint/action combo
     def _path(action=nil)
