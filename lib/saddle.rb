@@ -2,6 +2,7 @@ require 'saddle/client_attributes'
 require 'saddle/method_tree_builder'
 require 'saddle/options'
 require 'saddle/requester'
+require 'saddle/version'
 
 
 # Inherit your client implementation from Saddle::Client
@@ -16,7 +17,7 @@ module Saddle
     extend Options
 
     class << self
-      attr_accessor :additional_middlewares
+      attr_accessor :additional_middlewares, :parent_module
 
       # Once your implementation is written, this is the magic you need to
       # create a client instance.
@@ -38,12 +39,8 @@ module Saddle
         end
         # Add additional client attributes
         obj.send(:include, Saddle::ClientAttributes)
-      end
-
-      # Name of the module that contains the implementing client
-      def root_namespace
-        module_nests = self.name.split('::')
-        module_nests.length > 1 ? module_nests[-2] : module_nests.last
+        # Store the parent module in case we need it later
+        @parent_module = Module.nesting.last
       end
 
     end

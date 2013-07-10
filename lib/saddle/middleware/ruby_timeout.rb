@@ -13,7 +13,7 @@ module Saddle
     class RubyTimeout < Faraday::Middleware
 
       def call(env)
-        timeout = env[:request][:timeout] # nil or 0 means no timeout
+        timeout = env[:request][:hard_timeout] # nil or 0 means no timeout
         Timeout.timeout(timeout, Saddle::TimeoutError) do
           @app.call(env)
         end

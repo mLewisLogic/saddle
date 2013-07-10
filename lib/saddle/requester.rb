@@ -1,12 +1,16 @@
 require 'faraday'
 require 'faraday_middleware'
 
+
 require 'saddle/middleware/request/encode_json'
 require 'saddle/middleware/request/path_prefix'
 require 'saddle/middleware/request/retry'
 require 'saddle/middleware/request/url_encoded'
+require 'saddle/middleware/request/user_agent'
+
 require 'saddle/middleware/response/default_response'
 require 'saddle/middleware/response/parse_json'
+
 require 'saddle/middleware/ruby_timeout'
 
 
@@ -123,8 +127,11 @@ module Saddle
           builder.options[:num_retries] = @num_retries
         end
 
-        # Set up a user agent (named for the client's namespace)
-        builder.headers[:user_agent] = @parent_client.root_namespace
+        # Hard timeout on the entire request
+        builder.use(Saddle::Middleware::RubyTimeout)
+
+        # Set up a user agent
+        builder.use(Saddle::Middleware::Request::UserAgent)
 
         # Set up the path prefix if needed
         builder.use(Saddle::Middleware::Request::PathPrefix)
@@ -137,18 +144,15 @@ module Saddle
           builder.use(m[:klass], *m[:args])
         end
 
-        # Hard timeout on the entire request
-        builder.use(Saddle::Middleware::RubyTimeout)
-
         # Request encoding
         builder.use(Saddle::Middleware::Request::JsonEncoded)
         builder.use(Saddle::Middleware::Request::UrlEncoded)
 
-        # Automatic retries
-        builder.use(Saddle::Middleware::Request::Retry)
-
         # Handle parsing out the response if it's JSON
         builder.use(Saddle::Middleware::Response::ParseJson)
+
+        # Automatic retries
+        builder.use(Saddle::Middleware::Request::Retry)
 
         # Raise exceptions on 4xx and 5xx errors
         builder.use(Faraday::Response::RaiseError)
