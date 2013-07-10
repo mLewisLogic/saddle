@@ -21,10 +21,14 @@ module Saddle
             @app.call(env)
           rescue => e
             # If we don't have an api key, use the default config
-            if @airbrake_api_key
-              ::Airbrake.notify(e, {:api_key => @airbrake_api_key} )
-            else
-              ::Airbrake.notify(e)
+            begin
+              if @airbrake_api_key
+                ::Airbrake.notify(e, {:api_key => @airbrake_api_key} )
+              else
+                ::Airbrake.notify(e)
+              end
+            rescue
+              # Never ever fail because we couldn't talk to Airbrake
             end
             # Re-raise the error
             raise
