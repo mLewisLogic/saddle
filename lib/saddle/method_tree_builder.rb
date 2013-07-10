@@ -64,7 +64,7 @@ module Saddle
           # Build the branch out with a base endpoint
           branch_node = current_node._build_and_attach_node(
             Saddle::TraversalEndpoint,
-            const_symbol.underscore
+            const_symbol.to_s.underscore
           )
           # Build out the branch's endpoints on the new branch node
           self.build_node_children(const, branch_node, requester)
