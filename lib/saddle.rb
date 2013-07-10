@@ -17,7 +17,7 @@ module Saddle
     extend Options
 
     class << self
-      attr_accessor :additional_middlewares, :parent_module
+      attr_accessor :additional_middlewares
 
       # Once your implementation is written, this is the magic you need to
       # create a client instance.
@@ -39,8 +39,6 @@ module Saddle
         end
         # Add additional client attributes
         obj.send(:include, Saddle::ClientAttributes)
-        # Store the parent module in case we need it later
-        @parent_module = Module.nesting.last
       end
 
     end

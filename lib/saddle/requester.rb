@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash'
+
 require 'faraday'
 require 'faraday_middleware'
 
@@ -65,7 +67,7 @@ module Saddle
     # Make a GET request
     def get(url, params={}, options={})
       response = connection.get do |req|
-        req.options.merge!(options)
+        req.options.deep_merge!(options)
         req.url(url, params)
       end
       response.body
@@ -74,7 +76,7 @@ module Saddle
     # Make a POST request
     def post(url, data={}, options={})
       response = connection.post do |req|
-        req.options.merge!(options)
+        req.options.deep_merge!(options)
         req.url(url)
         req.body = data
       end
@@ -84,7 +86,7 @@ module Saddle
     # Make a PUT request
     def put(url, data={}, options={})
       response = connection.put do |req|
-        req.options.merge!(options)
+        req.options.deep_merge!(options)
         req.url(url)
         req.body = data
       end
@@ -94,7 +96,7 @@ module Saddle
     # Make a DELETE request
     def delete(url, params={}, options={})
       response = connection.delete do |req|
-        req.options.merge!(options)
+        req.options.deep_merge!(options)
         req.url(url, params)
       end
       response.body

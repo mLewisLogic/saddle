@@ -30,7 +30,7 @@ describe Saddle::Client do
           [
             200,
             {'Content-Type' => 'application/json'},
-            {'success' => true},
+            {'success' => true}.to_json,
           ]
         }
         @default_client.requester.get('/test.json')['success'].should == true
