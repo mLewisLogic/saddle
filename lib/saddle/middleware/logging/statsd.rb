@@ -1,3 +1,5 @@
+require 'active_support/core_ext/string'
+
 require 'statsd'
 require 'faraday'
 
@@ -36,7 +38,7 @@ module Saddle
           elsif env[:request][:saddle]
             statsd_path_components = [
               'saddle',
-              ActiveSupport::Inflector.underscore(env[:request][:saddle][:client].name),
+              env[:request][:saddle][:client].name.underscore,
             ]
             if env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
               statsd_path_components += env[:request][:saddle][:call_chain]

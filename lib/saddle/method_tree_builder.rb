@@ -1,4 +1,4 @@
-require 'active_support'
+require 'active_support/core_ext/string'
 
 require 'saddle/endpoint'
 
@@ -16,9 +16,12 @@ module Saddle
     # Build out the endpoint structure from the root of the implementation
     def build_tree(requester)
       root_node = build_root_node(requester)
-      # If we have an 'endpoints' directory, build it out
-      if knows_root? && Dir.exists?(endpoints_directory)
-        Dir["#{endpoints_directory}/**/*.rb"].each { |f| load(f) }
+      # Search out the implementations directory structure for endpoints
+      if defined?(self.implementation_root)
+        # For each endpoints directory, recurse down it to load the modules
+        endpoints_directories.each do |endpoints_directories|
+          Dir["#{endpoints_directories}/**/*.rb"].each { |f| require(f) }
+        end
         build_node_children(self.endpoints_module, root_node, requester)
       end
       root_node
@@ -28,14 +31,14 @@ module Saddle
     # Build our root node here. The root node is special in that it lives below
     # the 'endpoints' directory, and so we need to manually check if it exists.
     def build_root_node(requester)
-      if knows_root?
+      if defined?(self.implementation_root)
         root_endpoint_file = File.join(
           self.implementation_root,
           'root_endpoint.rb'
         )
         if File.file?(root_endpoint_file)
           # Load it and create our base endpoint
-          load(root_endpoint_file)
+          require(root_endpoint_file)
           # RootEndpoint is the special class name for a root endpoint
           root_node_class = self.implementation_module::RootEndpoint
         else
@@ -52,6 +55,7 @@ module Saddle
 
     # Build out the traversal tree by module namespace
     def build_node_children(current_module, current_node, requester)
+      return unless current_module
       current_module.constants.each do |const_symbol|
         const = current_module.const_get(const_symbol)
 
@@ -60,7 +64,7 @@ module Saddle
           # Build the branch out with a base endpoint
           branch_node = current_node._build_and_attach_node(
             Saddle::TraversalEndpoint,
-            ActiveSupport::Inflector.underscore(const_symbol)
+            const_symbol.underscore
           )
           # Build out the branch's endpoints on the new branch node
           self.build_node_children(const, branch_node, requester)
@@ -78,27 +82,23 @@ module Saddle
     # Get the module that the client implementation belongs to. This will act
     # as the root namespace for endpoint traversal and construction
     def implementation_module
-      ::ActiveSupport::Inflector.constantize(
-        self.name.split('::')[0..-2].join('::')
-      )
+      self.name.split('::')[0..-2].join('::').constantize
+    end
+
+    # Get all directories under the implementation root named 'endpoints'
+    # This search allows for flexible structuring of gem
+    def endpoints_directories
+      Dir["#{implementation_root}/**/"].select { |d| d.ends_with?('endpoints/') }
     end
 
     # Get the Endpoints module that lives within this implementation's
     # namespace
     def endpoints_module
-      implementation_module.const_get('Endpoints')
-    end
-
-    # Get the path to the 'endpoints' directory, based upon the client
-    # class that inherited Saddle
-    def endpoints_directory
-      File.join(self.implementation_root, 'endpoints')
-    end
-
-    # If this client was not fully constructed, it may not even have an
-    # implementation root. Allow that behavior to avoid filesystem searching.
-    def knows_root?
-      defined?(self.implementation_root)
+      begin
+        implementation_module.const_get('Endpoints')
+      rescue NameError
+        nil # If there is no endpoints module, we just won't load any
+      end
     end
 
   end

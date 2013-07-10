@@ -1,12 +1,11 @@
-require 'saddle'
-
+require 'spec_helper'
 
 
 describe 'FaradayMiddleware::Instrumentation' do
 
   context "test integration of instrumentation middleware" do
 
-    it "with a request" do
+    it "with a request should not bomb" do
       client = Saddle::Client.create(
         :stubs => Faraday::Adapter::Test::Stubs.new do |stub|
           stub.get('/test') {
@@ -18,9 +17,6 @@ describe 'FaradayMiddleware::Instrumentation' do
           }
         end
       )
-
-
-
 
       client.requester.get('/test').should == 'Party on!'
     end

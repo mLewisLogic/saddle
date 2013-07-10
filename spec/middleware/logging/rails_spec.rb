@@ -1,6 +1,6 @@
-require 'saddle'
-require 'saddle/middleware/logging/rails'
+require 'spec_helper'
 
+require 'saddle/middleware/logging/rails'
 
 
 describe Saddle::Middleware::Logging::RailsLogger do

@@ -1,6 +1,6 @@
-require 'saddle'
-require 'saddle/middleware/logging/airbrake'
+require 'spec_helper'
 
+require 'saddle/middleware/logging/airbrake'
 
 
 describe Saddle::Middleware::Logging::AirbrakeLogger do

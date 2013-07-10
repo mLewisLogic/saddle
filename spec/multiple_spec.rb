@@ -1,9 +1,9 @@
-require 'faraday'
-require 'saddle'
+require 'spec_helper'
 
-
-
-### Make sure that multiple implementations of Saddle clients don't conflict with each other's middlewar.
+###
+# Make sure that multiple implementations of Saddle clients don't conflict with
+# each other's middleware.
+###
 
 describe Saddle::Client do
 

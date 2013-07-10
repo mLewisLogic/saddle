@@ -1,5 +1,4 @@
-require 'saddle'
-
+require 'spec_helper'
 
 
 describe Saddle::Client do

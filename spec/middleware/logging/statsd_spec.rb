@@ -1,6 +1,6 @@
-require 'saddle'
-require 'saddle/middleware/logging/statsd'
+require 'spec_helper'
 
+require 'saddle/middleware/logging/statsd'
 
 
 describe Saddle::Middleware::Logging::StatsdLogger do

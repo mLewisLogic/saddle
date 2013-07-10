@@ -12,3 +12,7 @@ group :test do
   gem 'airbrake'
   gem 'statsd-ruby', :require => ['statsd']
 end
+
+group :development, :test do
+  gem 'pry'
+end

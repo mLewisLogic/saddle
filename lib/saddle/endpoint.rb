@@ -1,4 +1,4 @@
-require 'active_support'
+require 'active_support/core_ext/string'
 
 
 
@@ -66,11 +66,7 @@ module Saddle
       # Create the new endpoint
       endpoint_instance = endpoint_class.new(@requester, method_name, self)
       # Attach the endpoint as an instance variable and method
-      method_name ||= ActiveSupport::Inflector.underscore(
-        ActiveSupport::Inflector.demodulize(
-          endpoint_class.name
-        )
-      )
+      method_name ||= endpoint_class.name.demodulize.underscore
       self.instance_variable_set("@#{method_name}", endpoint_instance)
       self.class.class_eval { define_method(method_name) { endpoint_instance } }
       endpoint_instance
@@ -115,11 +111,7 @@ module Saddle
       if _is_root?
         nil
       else
-        ActiveSupport::Inflector.underscore(
-          ActiveSupport::Inflector.demodulize(
-            self.class.name
-          )
-        )
+        self.class.name.demodulize.underscore
       end
     end
   end
