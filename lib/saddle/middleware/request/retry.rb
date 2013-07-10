@@ -22,13 +22,16 @@ module Saddle
           begin
             @app.call(self.class.deep_copy(env))
           rescue => e
-            unless @ignored_exceptions.include?(e.class)
-              # Retry a limited number of times
-              if retries > 0
-                retries -= 1
-                sleep(backoff) if backoff > 0.0
-                backoff *= 2
-                retry
+            # Only retry for GET or if the request is marked as idempotent
+            if env[:method] == :get || env[:request][:idempotent]
+              unless @ignored_exceptions.include?(e.class)
+                # Retry a limited number of times
+                if retries > 0
+                  retries -= 1
+                  sleep(backoff) if backoff > 0.0
+                  backoff *= 2
+                  retry
+                end
               end
             end
             # Re-raise if we're out of retries or it's not handled

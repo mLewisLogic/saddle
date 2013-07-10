@@ -1,3 +1,4 @@
+require 'faraday'
 require 'saddle'
 
 
@@ -12,43 +13,94 @@ describe Saddle::Client do
         @default_client = Saddle::Client.create(:stubs => @stubs)
       end
 
-      it "should retry properly with no params" do
-        @stubs.get('/test') {
-          [
-            500,
-            {},
-            'Failure',
-          ]
-        }
-        @stubs.get('/test') {
-          [
-            200,
-            {},
-            'Party!',
-          ]
-        }
-        @default_client.requester.get('/test').should == 'Party!'
+      context "for a GET request" do
+        it "with no params should properly retry" do
+          url = '/test'
+          @stubs.get(url) {
+            [
+              500,
+              {},
+              'Failure',
+            ]
+          }
+          @stubs.get(url) {
+            [
+              200,
+              {},
+              'Party!',
+            ]
+          }
+          @default_client.requester.get(url).should == 'Party!'
+        end
+
+        it "with params should properly retry" do
+          url = '/test?a=1'
+          @stubs.get(url) {
+            [
+              500,
+              {},
+              'Failure',
+            ]
+          }
+          @stubs.get(url) {
+            [
+              200,
+              {},
+              'Party!',
+            ]
+          }
+          @default_client.requester.get(url).should == 'Party!'
+        end
       end
 
-      it "should retry properly when posting params urlencoded" do
-        @stubs.post('/test', '{"a":"b","c":"d"}') {
-          [
-            500,
-            {},
-            'Failure',
-          ]
-        }
-        @stubs.post('/test', '{"a":"b","c":"d"}') {
-          [
-            200,
-            {},
-            'Party!',
-          ]
-        }
-        @default_client.requester.post(
-          '/test',
-          {'a' => 'b', 'c' => 'd'}
-        ).should == 'Party!'
+
+
+      context "for a POST request" do
+        it "should not retry" do
+          url = '/test'
+          @stubs.post(url) {
+            [
+              500,
+              {},
+              'Failure',
+            ]
+          }
+          @stubs.post(url) {
+            [
+              200,
+              {},
+              'Party!',
+            ]
+          }
+          expect {
+            @default_client.requester.post(url)
+          }.to raise_error(Faraday::Error::ClientError)
+        end
+
+        it "should retry if it is marked as idempotent" do
+          url = '/test'
+          params = {'a' => 1, 'b' => 2}
+          params_json = params.to_json
+          @stubs.post(url, params_json) {
+            [
+              500,
+              {},
+              'Failure',
+            ]
+          }
+          @stubs.post(url, params_json) {
+            [
+              200,
+              {},
+              'Party!',
+            ]
+          }
+          @default_client.requester.post(
+            url,
+            params,
+            {:idempotent => true}
+          ).should == 'Party!'
+        end
       end
 
     end
