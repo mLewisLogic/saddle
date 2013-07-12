@@ -6,7 +6,6 @@ Saddle makes writing service clients as easy as giving high fives. :hand:
 
 It's a full-featured, generic consumer layer for you to build API client implementations with.
 
-[![Code Climate](https://codeclimate.com/github/mLewisLogic/saddle.png)](https://codeclimate.com/github/mLewisLogic/saddle)
 
 ## about
 
@@ -61,3 +60,15 @@ Saddle enables you to create beautifully stable and functionaly API clients, in 
 
 ## todo
 * xml posting/parsing
+
+
+## Code Status
+
+* [![Build Status](https://travis-ci.org/mLewisLogic/saddle.png?branch=master)](https://travis-ci.org/mLewisLogic/saddle)
+* [![Code Climate](https://codeclimate.com/github/mLewisLogic/saddle.png)](https://codeclimate.com/github/mLewisLogic/saddle)
+* [![Dependency Status](https://gemnasium.com/mLewisLogic/saddle.png)](https://gemnasium.com/mLewisLogic/saddle)
+
+
+## License
+
+Saddle is released under the [MIT License](http://www.opensource.org/licenses/MIT).
