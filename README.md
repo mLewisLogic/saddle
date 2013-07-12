@@ -6,6 +6,7 @@ Saddle makes writing service clients as easy as giving high fives. :hand:
 
 It's a full-featured, generic consumer layer for you to build API client implementations with.
 
+[![Code Climate](https://codeclimate.com/github/mLewisLogic/saddle.png)](https://codeclimate.com/github/mLewisLogic/saddle)
 
 ## about
 
