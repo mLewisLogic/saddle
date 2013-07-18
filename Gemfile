@@ -11,6 +11,7 @@ group :test do
   gem 'rspec-instafail', '~> 0.2'
 
   gem 'airbrake'
+  gem 'simple_oauth', '~> 0.2.0' # Optional dependency
   gem 'statsd-ruby', :require => ['statsd']
 end
 
