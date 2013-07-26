@@ -150,14 +150,14 @@ module Saddle
         builder.use(Saddle::Middleware::Request::JsonEncoded)
         builder.use(Saddle::Middleware::Request::UrlEncoded)
 
-        # Handle parsing out the response if it's JSON
-        builder.use(Saddle::Middleware::Response::ParseJson)
-
         # Automatic retries
         builder.use(Saddle::Middleware::Request::Retry)
 
         # Raise exceptions on 4xx and 5xx errors
         builder.use(Faraday::Response::RaiseError)
+
+        # Handle parsing out the response if it's JSON
+        builder.use(Saddle::Middleware::Response::ParseJson)
 
         # Set up instrumentation around the adapter for extensibility
         builder.use(FaradayMiddleware::Instrumentation)
