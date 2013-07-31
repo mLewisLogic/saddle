@@ -47,7 +47,7 @@ module Saddle
 
     # Default number of retries per request
     def num_retries
-      3
+      1
     end
 
     # Default timeout per request (in seconds)
