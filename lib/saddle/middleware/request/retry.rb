@@ -8,7 +8,7 @@ module Saddle
 
       # Catches exceptions and retries each request a limited number of times.
       #
-      # By default, it retries 2 times and performs exponential backoff, starting
+      # By default, it retries 0 times and performs exponential backoff, starting
       # at 50ms
       class Retry < Faraday::Middleware
         def initialize(app, ignored_exceptions=[])
@@ -17,7 +17,7 @@ module Saddle
         end
 
         def call(env)
-          retries = env[:request][:num_retries] || 2
+          retries = env[:request][:num_retries] || 0
           backoff = env[:request][:retry_backoff] || 0.050 # in seconds
           begin
             @app.call(self.class.deep_copy(env))
