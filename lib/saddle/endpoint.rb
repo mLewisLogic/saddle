@@ -77,9 +77,13 @@ module Saddle
 
     # Get the url path for this endpoint/action combo
     def _path(action=nil)
-      paths = _path_array()
-      paths << action unless action.nil?
-      '/' + paths.join('/')
+      if defined?(self.class::ABSOLUTE_PATH)
+        [self.class::ABSOLUTE_PATH, action].compact.join('/')
+      else
+        paths = _path_array()
+        paths << action unless action.nil?
+        paths.join('/')
+      end
     end
 
     def _path_array
