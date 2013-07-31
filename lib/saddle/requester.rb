@@ -12,6 +12,7 @@ require 'saddle/middleware/request/user_agent'
 
 require 'saddle/middleware/response/default_response'
 require 'saddle/middleware/response/parse_json'
+require 'saddle/middleware/response/raise_error'
 
 require 'saddle/middleware/ruby_timeout'
 
@@ -154,7 +155,7 @@ module Saddle
         builder.use(Saddle::Middleware::Request::Retry)
 
         # Raise exceptions on 4xx and 5xx errors
-        builder.use(Faraday::Response::RaiseError)
+        builder.use(Saddle::Middleware::Response::RaiseError)
 
         # Handle parsing out the response if it's JSON
         builder.use(Saddle::Middleware::Response::ParseJson)
