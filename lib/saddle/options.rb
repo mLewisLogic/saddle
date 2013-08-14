@@ -14,8 +14,9 @@ module Saddle
         :request_style => request_style,
         :num_retries => num_retries,
         :timeout => timeout,
-        :additional_middlewares => self.additional_middlewares,
+        :http_adapter => http_adapter,
         :stubs => stubs,
+        :additional_middlewares => self.additional_middlewares,
       }
     end
 
@@ -55,9 +56,13 @@ module Saddle
       30
     end
 
-    # If you want to set up an ActiveSupport::Notification, give your client
-    #  an instrumentation key to monitor.
-    def instrumentation_key
+    # Support specification of the HTTP adapter being used
+    def http_adapter
+      :net_http
+    end
+
+    # If the Typhoeus adapter is being used, pass stubs to it for testing.
+    def stubs
       nil
     end
 
@@ -74,11 +79,6 @@ module Saddle
     ###
     def add_middleware m
       self.additional_middlewares << m
-    end
-
-    # If the Typhoeus adapter is being used, pass stubs to it for testing.
-    def stubs
-      nil
     end
 
   end
