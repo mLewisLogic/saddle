@@ -37,6 +37,7 @@ module Saddle
           'root_endpoint.rb'
         )
         if File.file?(root_endpoint_file)
+          warn "[DEPRECATION] `root_endpoint.rb` is deprecated. Please use `ABSOLUTE_PATH` in your endpoints."
           # Load it and create our base endpoint
           require(root_endpoint_file)
           # RootEndpoint is the special class name for a root endpoint
