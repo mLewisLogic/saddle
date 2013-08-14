@@ -77,17 +77,23 @@ module Saddle
 
     # Get the url path for this endpoint/action combo
     def _path(action=nil)
-      if defined?(self.class::ABSOLUTE_PATH)
-        [self.class::ABSOLUTE_PATH, action].compact.join('/')
-      else
-        paths = _path_array()
-        paths << action unless action.nil?
-        paths.join('/')
-      end
+      # Use the absolute path if present, otherwise get the relative path
+      pre_action_paths =
+        if defined?(self.class::ABSOLUTE_PATH)
+          [self.class::ABSOLUTE_PATH]
+        else
+          _path_array()
+        end
+      # Strip out empty elements
+      pre_action_paths.compact!
+      pre_action_paths.reject! { |p| p.empty? }
+      # Join it with the action
+      pre_action_paths << action
+      "/#{pre_action_paths.join('/')}"
     end
 
     def _path_array
-      _endpoint_chain().map(&:relative_path).reject{|p| p.nil?}
+      _endpoint_chain().map(&:relative_path).compact
     end
 
     # Get the parent chain that led to this endpoint
