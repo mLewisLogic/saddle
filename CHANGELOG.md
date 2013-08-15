@@ -1,3 +1,9 @@
+# 0.0.43
+* Fixed a bug where non-string path elements were crashing
+
+# 0.0.42
+* Fixed a bug where nil actions resulted in a trailing /
+
 # 0.0.41
 * Cleanup of the path building chain makes nicer URLs
 
