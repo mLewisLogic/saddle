@@ -84,12 +84,11 @@ module Saddle
         else
           _path_array()
         end
-      # Strip out empty elements
-      pre_action_paths.compact!
-      pre_action_paths.reject! { |p| p.empty? }
       # Join it with the action
-      pre_action_paths << action
-      "/#{pre_action_paths.join('/')}"
+      paths = pre_action_paths + [action]
+      # Strip out empty elements
+      paths.reject! { |p| p.nil? || p.empty? }
+      "/#{paths.join('/')}"
     end
 
     def _path_array
