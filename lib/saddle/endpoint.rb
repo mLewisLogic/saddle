@@ -87,7 +87,7 @@ module Saddle
       # Join it with the action
       paths = pre_action_paths + [action]
       # Strip out empty elements
-      paths.reject! { |p| p.nil? || p.empty? }
+      paths = paths.map(&:to_s).reject(&:empty?)
       "/#{paths.join('/')}"
     end
 
