@@ -1,0 +1,83 @@
+#!/usr/bin/env ruby
+
+require 'erb'
+require 'ostruct'
+
+require 'active_support/core_ext/string'
+
+
+# Creation options
+# TODO: read via CLI
+settings = {
+  service_name: 'Example',
+  author_name: 'Mike Lewis',
+  author_email: 'mike.lewis@airbnb.com',
+  github_account: 'airbnb',
+}
+
+
+# This holds the project settings and realizes templates
+class ProjectGenerator
+  attr_reader :settings
+
+  # Expected settings:
+  #   service_name
+  #   author_name
+  #   author_email
+  #   github_account
+  def initialize(settings)
+    settings[:project_name] = "#{settings[:service_name].underscore}-client"
+    settings[:root_module] = settings[:service_name].split('_').map(&:capitalize).join('')
+    settings[:saddle_version] = Saddle::VERSION
+    @settings = OpenStruct.new(settings)
+
+    @template_dir = File.join(File.dirname(__FILE__), 'template')
+    @output_dir = '.'
+  end
+
+  # Transform a template file into the output directory
+  def transform_template(in_file, out_file=nil)
+    out_file = in_file if out_file.nil?
+    puts "Processing: #{out_file}"
+
+    # Ensure the directory is there
+    FileUtils.mkdir_p(File.dirname(out_file))
+    # Write the processed template
+    #puts File.read(File.join(@template_dir, in_file), 'r')
+    File.open(File.join(@output_dir, out_file), 'w') do |output|
+      output.puts(
+        ERB.new(
+          File.read(File.join(@template_dir, in_file))
+        ).result(
+          @settings.instance_eval { binding }
+        )
+      )
+    end
+  end
+end
+
+pg = ProjectGenerator.new(settings)
+# /lib
+# Create the contents of the gem directory in the correctly named directory
+%w(
+  endpoints/status.rb
+  middleware/exception_raiser.rb
+  exceptions.rb
+  stub.rb
+  version.rb
+).each do |tmpl|
+  pg.transform_template("lib/saddle-client/#{tmpl}", "lib/#{pg.settings.project_name}/#{tmpl}")
+end
+pg.transform_template('lib/saddle-client.rb', "lib/#{pg.settings.project_name}.rb")
+# /spec
+pg.transform_template('spec/integration/status_spec.rb')
+pg.transform_template('spec/middleware/exception_raiser_spec.rb')
+pg.transform_template('spec/stub/stub_spec.rb')
+pg.transform_template('spec/spec_helper.rb')
+# /
+pg.transform_template('.gitignore')
+pg.transform_template('.rspec')
+pg.transform_template('Gemfile')
+pg.transform_template('LICENSE')
+pg.transform_template('README.md')
+pg.transform_template('saddle-client.gemspec', "#{pg.settings.project_name}.gemspec")
