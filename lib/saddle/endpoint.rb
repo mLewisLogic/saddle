@@ -132,6 +132,9 @@ module Saddle
   # traversal tree.
   class TraversalEndpoint < BaseEndpoint; end
 
+  # This is a special case endpoint for the root node.
+  class RootEndpoint < TraversalEndpoint; end
+
 
   # This endpoint is used for constructing resource-style endpoints. This
   # means it will NOT be automatically added into the traversal tree.

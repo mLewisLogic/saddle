@@ -44,11 +44,11 @@ module Saddle
           root_node_class = self.implementation_module::RootEndpoint
         else
           # 'root_endpoint.rb' doesn't exist, so create a dummy endpoint
-          root_node_class = Saddle::TraversalEndpoint
+          root_node_class = Saddle::RootEndpoint
         end
       else
         # we don't even have an implementation root, so create a dummy endpoint
-        root_node_class = Saddle::TraversalEndpoint
+        root_node_class = Saddle::RootEndpoint
       end
       root_node_class.new(requester, nil, self)
     end
