@@ -68,7 +68,7 @@ module Saddle
       # Attach the endpoint as an instance variable and method
       method_name ||= endpoint_class.name.demodulize.underscore
       self.instance_variable_set("@#{method_name}", endpoint_instance)
-      self.class.class_eval { define_method(method_name) { endpoint_instance } }
+      self.define_singleton_method(method_name.to_s) { endpoint_instance }
       endpoint_instance
     end
 
