@@ -68,7 +68,7 @@ module Saddle
       # Attach the endpoint as an instance variable and method
       method_name ||= endpoint_class.name.demodulize.underscore
       self.instance_variable_set("@#{method_name}", endpoint_instance)
-      self.class.class_eval { define_method(method_name) { endpoint_instance } }
+      self.define_singleton_method(method_name.to_s) { endpoint_instance }
       endpoint_instance
     end
 
@@ -131,6 +131,9 @@ module Saddle
   # This endpoint will be automatically constructed into the node
   # traversal tree.
   class TraversalEndpoint < BaseEndpoint; end
+
+  # This is a special case endpoint for the root node.
+  class RootEndpoint < TraversalEndpoint; end
 
 
   # This endpoint is used for constructing resource-style endpoints. This
