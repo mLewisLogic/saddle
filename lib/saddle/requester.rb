@@ -132,6 +132,9 @@ module Saddle
           builder.options[:num_retries] = @num_retries
         end
 
+        # Support default return values upon exception
+        builder.use(Saddle::Middleware::Response::DefaultResponse)
+
         # Hard timeout on the entire request
         builder.use(Saddle::Middleware::RubyTimeout)
 
@@ -140,9 +143,6 @@ module Saddle
 
         # Set up the path prefix if needed
         builder.use(Saddle::Middleware::Request::PathPrefix)
-
-        # Support default return values upon exception
-        builder.use(Saddle::Middleware::Response::DefaultResponse)
 
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|

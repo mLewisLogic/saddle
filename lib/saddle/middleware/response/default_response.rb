@@ -12,7 +12,7 @@ module Saddle
         def call(env)
           begin
             @app.call(env)
-          rescue Faraday::Error::ClientError
+          rescue
             if res = env[:request][:default_response]
               return ::Faraday::Response.new(:body => res)
             else
