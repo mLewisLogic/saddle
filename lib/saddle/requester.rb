@@ -135,19 +135,16 @@ module Saddle
         # Support default return values upon exception
         builder.use(Saddle::Middleware::Response::DefaultResponse)
 
-        # Hard timeout on the entire request
-        builder.use(Saddle::Middleware::RubyTimeout)
+        # Apply additional implementation-specific middlewares
+        @additional_middlewares.each do |m|
+          builder.use(m[:klass], *m[:args])
+        end
 
         # Set up a user agent
         builder.use(Saddle::Middleware::Request::UserAgent)
 
         # Set up the path prefix if needed
         builder.use(Saddle::Middleware::Request::PathPrefix)
-
-        # Apply additional implementation-specific middlewares
-        @additional_middlewares.each do |m|
-          builder.use(m[:klass], *m[:args])
-        end
 
         # Request encoding
         builder.use(Saddle::Middleware::Request::JsonEncoded)
