@@ -120,17 +120,13 @@ module Saddle
         # Include the requester level options
         builder.options[:client_options] = @options
 
-        # Include a saddle hash
+        # Config options
+        builder.options[:timeout] = @timeout
+        builder.options[:request_style] = @request_style
+        builder.options[:num_retries] = @num_retries
         builder.options[:saddle] = {
           :client => @parent_client,
         }
-
-        # Config options
-        unless @timeout.nil?
-          builder.options[:timeout] = @timeout
-          builder.options[:request_style] = @request_style
-          builder.options[:num_retries] = @num_retries
-        end
 
         # Support default return values upon exception
         builder.use(Saddle::Middleware::Response::DefaultResponse)
