@@ -1,5 +1,7 @@
 # 0.0.45
-* 
+* DefaultResponse is now the top-level middleware
+* DefaultResponse now catches *all* exceptions
+* Some cleanup in the requester's connection builder
 
 # 0.0.44
 * Fixed a bug where child endpoints were being attached to the parent's class. This would
