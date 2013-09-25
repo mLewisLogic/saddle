@@ -1,3 +1,6 @@
+# 0.0.45
+* 
+
 # 0.0.44
 * Fixed a bug where child endpoints were being attached to the parent's class. This would
   cause problems because the root node's class is always TraversalEndpoint, and would be shared

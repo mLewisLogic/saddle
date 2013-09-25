@@ -131,6 +131,9 @@ module Saddle
         # Support default return values upon exception
         builder.use(Saddle::Middleware::Response::DefaultResponse)
 
+        # Hard timeout on the entire request
+        builder.use(Saddle::Middleware::RubyTimeout)
+
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|
           builder.use(m[:klass], *m[:args])
