@@ -120,34 +120,30 @@ module Saddle
         # Include the requester level options
         builder.options[:client_options] = @options
 
-        # Include a saddle hash
+        # Config options
+        builder.options[:timeout] = @timeout
+        builder.options[:request_style] = @request_style
+        builder.options[:num_retries] = @num_retries
         builder.options[:saddle] = {
           :client => @parent_client,
         }
 
-        # Config options
-        unless @timeout.nil?
-          builder.options[:timeout] = @timeout
-          builder.options[:request_style] = @request_style
-          builder.options[:num_retries] = @num_retries
-        end
+        # Support default return values upon exception
+        builder.use(Saddle::Middleware::Response::DefaultResponse)
 
         # Hard timeout on the entire request
         builder.use(Saddle::Middleware::RubyTimeout)
+
+        # Apply additional implementation-specific middlewares
+        @additional_middlewares.each do |m|
+          builder.use(m[:klass], *m[:args])
+        end
 
         # Set up a user agent
         builder.use(Saddle::Middleware::Request::UserAgent)
 
         # Set up the path prefix if needed
         builder.use(Saddle::Middleware::Request::PathPrefix)
-
-        # Support default return values upon exception
-        builder.use(Saddle::Middleware::Response::DefaultResponse)
-
-        # Apply additional implementation-specific middlewares
-        @additional_middlewares.each do |m|
-          builder.use(m[:klass], *m[:args])
-        end
 
         # Request encoding
         builder.use(Saddle::Middleware::Request::JsonEncoded)
