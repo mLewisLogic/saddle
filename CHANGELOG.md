@@ -1,3 +1,7 @@
+# 0.0.46
+* Moving the path_prefix and user-agent middlewares before the custom middleware block.
+** This is needed for OAuth 1.0 middleware to work.
+
 # 0.0.45
 * DefaultResponse is now the top-level middleware
 * DefaultResponse now catches *all* exceptions
