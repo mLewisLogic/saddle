@@ -56,7 +56,8 @@ module Saddle
       30
     end
 
-    # Support specification of the HTTP adapter being used
+    # Support specification of the HTTP adapter being used. Returns a symbol or
+    # hash of the form { :key => :net_http, :args => [ ... ] }.
     def http_adapter
       :net_http
     end
