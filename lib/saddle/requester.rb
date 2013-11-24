@@ -58,8 +58,13 @@ module Saddle
       raise ':additional_middleware must be an Array' unless @additional_middlewares.is_a?(Array)
       raise 'invalid middleware found' unless @additional_middlewares.all? { |m| m[:klass] < Faraday::Middleware }
       raise 'middleware arguments must be an array' unless @additional_middlewares.all? { |m| m[:args].nil? || m[:args].is_a?(Array) }
+
       @http_adapter = opt[:http_adapter] || :net_http
-      raise ':http_adapter must be a symbol' unless @http_adapter.is_a?(Symbol)
+      raise ':http_adapter must be a symbol or a hash' unless @http_adapter.is_a?(Symbol) || @http_adapter.is_a?(Hash)
+      @http_adapter = { :key => @http_adapter } if @http_adapter.is_a?(Symbol)
+      raise 'adapter key must be a symbol' unless @http_adapter[:key].is_a?(Symbol)
+      raise 'adapter arguments must be an array' unless @http_adapter[:args].nil? || @http_adapter[:args].is_a?(Array)
+
       @stubs = opt[:stubs] || nil
       unless @stubs.nil?
         raise ':stubs must be a Faraday::Adapter::Test::Stubs' unless @stubs.is_a?(Faraday::Adapter::Test::Stubs)
@@ -164,7 +169,7 @@ module Saddle
         # Set up our adapter
         if @stubs.nil?
           # Use the default adapter
-          builder.adapter(@http_adapter)
+          builder.adapter(@http_adapter[:key], *@http_adapter[:args])
         else
           # Use the test adapter
           builder.adapter(:test, @stubs)
