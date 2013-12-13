@@ -69,6 +69,7 @@ module Saddle
       unless @stubs.nil?
         raise ':stubs must be a Faraday::Adapter::Test::Stubs' unless @stubs.is_a?(Faraday::Adapter::Test::Stubs)
       end
+      @return_full_response = opt[:return_full_response] || false
     end
 
 
@@ -78,7 +79,7 @@ module Saddle
         req.options.deep_merge!(options)
         req.url(url, params)
       end
-      response.body
+      handle_response(response)
     end
 
     # Make a POST request
@@ -88,7 +89,7 @@ module Saddle
         req.url(url)
         req.body = data
       end
-      response.body
+      handle_response(response)
     end
 
     # Make a PUT request
@@ -98,7 +99,7 @@ module Saddle
         req.url(url)
         req.body = data
       end
-      response.body
+      handle_response(response)
     end
 
     # Make a DELETE request
@@ -107,12 +108,17 @@ module Saddle
         req.options.deep_merge!(options)
         req.url(url, params)
       end
-      response.body
+      handle_response(response)
     end
 
 
 
     private
+
+    # Return the appropriate response format based on options
+    def handle_response response
+      @return_full_response ? response : response.body
+    end
 
     # Construct a base url using this requester's settings
     def base_url

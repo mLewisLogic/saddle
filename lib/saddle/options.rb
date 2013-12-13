@@ -16,7 +16,8 @@ module Saddle
         :timeout => timeout,
         :http_adapter => http_adapter,
         :stubs => stubs,
-        :additional_middlewares => self.additional_middlewares,
+        :return_full_response => return_full_response,
+        :additional_middlewares => self.additional_middlewares
       }
     end
 
@@ -67,7 +68,10 @@ module Saddle
       nil
     end
 
-
+    # Should the client return the full response object, or just the body?
+    def return_full_response
+      false
+    end
 
     # Use this to add additional middleware to the request stack
     # ex:
