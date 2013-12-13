@@ -5,6 +5,9 @@
 # RVM
 .rvmrc
 
+# rbenv
+.ruby-version
+
 # Gems
 *.gem
 Gemfile.lock
