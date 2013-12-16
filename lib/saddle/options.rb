@@ -14,6 +14,7 @@ module Saddle
         :request_style => request_style,
         :num_retries => num_retries,
         :timeout => timeout,
+        :extra_env => extra_env,
         :http_adapter => http_adapter,
         :stubs => stubs,
         :return_full_response => return_full_response,
@@ -55,6 +56,11 @@ module Saddle
     # Default timeout per request (in seconds)
     def timeout
       30
+    end
+
+    # If we need to load more into env before it passes to the adapter, use this
+    def extra_env
+      {}
     end
 
     # Support specification of the HTTP adapter being used. Returns a symbol or

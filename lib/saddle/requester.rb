@@ -14,6 +14,7 @@ require 'saddle/middleware/response/default_response'
 require 'saddle/middleware/response/parse_json'
 require 'saddle/middleware/response/raise_error'
 
+require 'saddle/middleware/extra_env'
 require 'saddle/middleware/ruby_timeout'
 
 
@@ -54,6 +55,8 @@ module Saddle
       raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
       @timeout = opt[:timeout]
       raise ':timeout must be nil or an integer' unless (@timeout.nil? || @timeout.is_a?(Numeric))
+      @extra_env = opt[:extra_env]
+      raise 'extra_env must be a Hash' unless @extra_env.is_a?(Hash)
       @additional_middlewares = opt[:additional_middlewares] || []
       raise ':additional_middleware must be an Array' unless @additional_middlewares.is_a?(Array)
       raise 'invalid middleware found' unless @additional_middlewares.all? { |m| m[:klass] < Faraday::Middleware }
@@ -171,6 +174,9 @@ module Saddle
 
         # Set up instrumentation around the adapter for extensibility
         builder.use(FaradayMiddleware::Instrumentation)
+
+        # Add in extra env data if needed
+        builder.use(Saddle::Middleware::ExtraEnv)
 
         # Set up our adapter
         if @stubs.nil?

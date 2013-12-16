@@ -1,3 +1,6 @@
+# 0.0.49
+* Support `extra_env` as a client option to load more into the env pre-adapter.
+
 # 0.0.48
 * Optionally return the full response object using `:return_full_response`
 
