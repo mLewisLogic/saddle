@@ -1,3 +1,9 @@
+# 0.0.48
+* Optionally return the full response object using `:return_full_response`
+
+# 0.0.47
+* Pass arguments to the underlying HTTP adapter via `:http_adapter`
+
 # 0.0.46
 * Moving the path_prefix and user-agent middlewares before the custom middleware block.
 ** This is needed for OAuth 1.0 middleware to work.
