@@ -60,7 +60,7 @@ module Saddle
     # Support specification of the HTTP adapter being used. Returns a symbol or
     # hash of the form { :key => :net_http, :args => [ ... ] }.
     def http_adapter
-      :net_http
+      { :key => :net_http, :args => [] }
     end
 
     # If the Typhoeus adapter is being used, pass stubs to it for testing.
