@@ -55,7 +55,7 @@ module Saddle
       raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
       @timeout = opt[:timeout]
       raise ':timeout must be nil or an integer' unless (@timeout.nil? || @timeout.is_a?(Numeric))
-      @extra_env = opt[:extra_env]
+      @extra_env = opt[:extra_env] || {}
       raise 'extra_env must be a Hash' unless @extra_env.is_a?(Hash)
       @additional_middlewares = opt[:additional_middlewares] || []
       raise ':additional_middleware must be an Array' unless @additional_middlewares.is_a?(Array)
