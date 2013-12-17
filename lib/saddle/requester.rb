@@ -156,7 +156,7 @@ module Saddle
 
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|
-          builder.use(m[:klass], *m[:args])
+          m[:args] ? builder.use(m[:klass], *m[:args]) : builder.use(m[:klass])
         end
 
         # Request encoding
