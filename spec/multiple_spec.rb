@@ -37,10 +37,10 @@ describe Saddle::Client do
 
         # Clients
         class Client1 < Saddle::Client
-          add_middleware({:klass => Middleware1})
+          add_middleware({:klass => Middleware1, :args => []})
         end
         class Client2 < Saddle::Client
-          add_middleware({:klass => Middleware2})
+          add_middleware({:klass => Middleware2, :args => []})
         end
       end
 

@@ -38,7 +38,7 @@ describe Saddle::Client do
       end
 
       it "should post JSON encoded" do
-        @stubs.post('/test', '{"a":0,"b":true,"c":"Wingdings"}') {
+        @stubs.post('/test', {'a' => 0, 'b' => true, 'c' => 'Wingdings'}.to_json) {
           [
             200,
             {},
