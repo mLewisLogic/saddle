@@ -11,6 +11,7 @@ describe Saddle::Middleware::Logging::RailsLogger do
       class RailsClient < Saddle::Client
         add_middleware({
           :klass => Saddle::Middleware::Logging::RailsLogger,
+          :args => []
         })
       end
 

@@ -10,7 +10,7 @@ describe Saddle::Middleware::Logging::AirbrakeLogger do
     it "with a request" do
       class AirbrakeClient < Saddle::Client
         add_middleware({
-          :klass => Saddle::Middleware::Logging::AirbrakeLogger,
+          :klass => Saddle::Middleware::Logging::AirbrakeLogger
         })
       end
 
