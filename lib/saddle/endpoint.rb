@@ -73,7 +73,7 @@ module Saddle
     end
 
     unless self.respond_to?(:define_singleton_method)
-      def self.define_singleton_method(name, &block)
+      def define_singleton_method(name, &block)
         (class << self; self end).send(:define_method, name, &block)
       end
     end
