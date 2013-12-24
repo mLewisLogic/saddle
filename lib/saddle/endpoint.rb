@@ -72,6 +72,11 @@ module Saddle
       endpoint_instance
     end
 
+    unless self.respond_to?(:define_singleton_method)
+      def define_singleton_method(name, &block)
+        (class << self; self end).send(:define_method, name, &block)
+      end
+    end
 
     protected
 
