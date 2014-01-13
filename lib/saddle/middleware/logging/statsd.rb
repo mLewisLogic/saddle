@@ -52,12 +52,17 @@ module Saddle
 
           # If we have a path, wrap the call
           if statsd_path
-            self.statsd.time(statsd_path) do
+            self.statsd.time(sanitize_path(statsd_path)) do
               @app.call(env)
             end
           else
             @app.call(env)
           end
+        end
+
+        private
+        def sanitize_path(path)
+          path.gsub(/\s+/, '_').gsub(/\//, '-').gsub(/[^a-zA-Z_\-0-9\.]/, '')
         end
       end
 

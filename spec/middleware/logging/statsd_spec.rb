@@ -7,13 +7,15 @@ describe Saddle::Middleware::Logging::StatsdLogger do
 
   context "test Statsd middleware" do
 
-    it "with a request" do
-      class StatsdClient < Saddle::Client
-        add_middleware({
-          :klass => Saddle::Middleware::Logging::StatsdLogger,
-          :args => ['127.0.0.1'],
-        })
-      end
+    class StatsdClient < Saddle::Client
+      add_middleware({
+        :klass => Saddle::Middleware::Logging::StatsdLogger,
+        :args => ['127.0.0.1'],
+      })
+    end
+
+    it "should log a request" do
+      ::Statsd.any_instance.should_receive(:time).with("saddle.statsd_client.raw.localhost-test").and_yield
 
       client = StatsdClient.create(
         :stubs => Faraday::Adapter::Test::Stubs.new do |stub|
@@ -27,6 +29,23 @@ describe Saddle::Middleware::Logging::StatsdLogger do
         end
       )
       client.requester.get('/test').should == 'Party on!'
+    end
+
+    it "should allow overriding the path" do
+      ::Statsd.any_instance.should_receive(:time).with("hello").and_yield
+
+      client = StatsdClient.create(
+        :stubs => Faraday::Adapter::Test::Stubs.new do |stub|
+          stub.get('/test') {
+            [
+              200,
+              {},
+              'Party on!',
+            ]
+          }
+        end
+      )
+      client.requester.get('/test', {}, {:statsd_path => "hello"}).should == 'Party on!'
     end
 
   end
