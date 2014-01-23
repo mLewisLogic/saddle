@@ -80,6 +80,7 @@ module Saddle
     def get(url, params={}, options={})
       response = connection.get do |req|
         req.options.deep_merge!(options)
+        req.body = options[:body] if options.has_key?(:body)
         req.url(url, params)
       end
       handle_response(response)
