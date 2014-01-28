@@ -25,6 +25,21 @@ describe Saddle::Client do
         ).should == 'Party on!'
       end
 
+      it "should request properly with params in the body" do
+        @stubs.send(:new_stub, :get, '/test', "body data") {
+          [
+            200,
+            {},
+            'Party on!',
+          ]
+        }
+        @default_client.requester.get(
+          '/test',
+          {},
+          :body => "body data",
+        ).should == 'Party on!'
+      end
+
       it "should parse JSON encoded responses" do
         @stubs.get('/test.json') {
           [
