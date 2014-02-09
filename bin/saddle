@@ -5,6 +5,8 @@ require 'ostruct'
 
 require 'active_support/core_ext/string'
 
+require 'saddle'
+
 
 # Creation options
 # TODO: read via CLI
