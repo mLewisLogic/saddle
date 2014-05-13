@@ -36,7 +36,7 @@ describe Saddle::Client do
         @default_client.requester.get(
           '/test',
           {},
-          :body => "body data",
+          {:body => 'body data'}
         ).should == 'Party on!'
       end
 
