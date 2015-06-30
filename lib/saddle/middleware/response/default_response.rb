@@ -13,7 +13,7 @@ module Saddle
           begin
             @app.call(env)
           rescue
-            if res = env[:request][:default_response]
+            if res = env[:saddle][:default_response]
               return ::Faraday::Response.new(:body => res)
             else
               raise

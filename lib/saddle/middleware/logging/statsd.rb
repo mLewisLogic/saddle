@@ -33,16 +33,16 @@ module Saddle
 
         def call(env)
           # Try to build up a path for the STATSD logging
-          if env[:request][:statsd_path]
-            statsd_path = env[:request][:statsd_path]
-          elsif env[:request][:saddle]
+          if env[:saddle][:statsd_path]
+            statsd_path = env[:saddle][:statsd_path]
+          elsif env[:saddle][:saddle]
             statsd_path_components = [
               'saddle',
-              env[:request][:saddle][:client].name.underscore,
+              env[:saddle][:saddle][:client].name.underscore,
             ]
-            if env[:request][:saddle][:call_chain] && env[:request][:saddle][:action]
-              statsd_path_components += env[:request][:saddle][:call_chain]
-              statsd_path_components << env[:request][:saddle][:action]
+            if env[:saddle][:saddle][:call_chain] && env[:saddle][:saddle][:action]
+              statsd_path_components += env[:saddle][:saddle][:call_chain]
+              statsd_path_components << env[:saddle][:saddle][:action]
             else
               statsd_path_components << 'raw'
               statsd_path_components << "#{env[:url].host}#{env[:url].path}"

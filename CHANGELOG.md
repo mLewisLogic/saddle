@@ -1,3 +1,6 @@
+# 0.0.54
+* Work with faraday ~> 0.9.0. With these changes, Saddle no longer works with faraday < 0.9.
+
 # 0.0.49
 * Support `extra_env` as a client option to load more into the env pre-adapter.
 

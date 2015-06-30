@@ -2,7 +2,8 @@ require 'active_support/core_ext/hash'
 
 require 'faraday'
 require 'faraday_middleware'
-
+require 'saddle/faraday/request'
+require 'saddle/faraday/rack_builder'
 
 require 'saddle/middleware/request/encode_json'
 require 'saddle/middleware/request/path_prefix'
@@ -79,7 +80,7 @@ module Saddle
     # Make a GET request
     def get(url, params={}, options={})
       response = connection.get do |req|
-        req.options.deep_merge!(options)
+        req.saddle_options = options
         req.body = options[:body] if options.has_key?(:body)
         req.url(url, params)
       end
@@ -89,7 +90,7 @@ module Saddle
     # Make a POST request
     def post(url, data={}, options={})
       response = connection.post do |req|
-        req.options.deep_merge!(options)
+        req.saddle_options = options
         req.url(url)
         req.body = data
       end
@@ -99,7 +100,7 @@ module Saddle
     # Make a PUT request
     def put(url, data={}, options={})
       response = connection.put do |req|
-        req.options.deep_merge!(options)
+        req.saddle_options = options
         req.url(url)
         req.body = data
       end
@@ -109,7 +110,7 @@ module Saddle
     # Make a DELETE request
     def delete(url, params={}, options={})
       response = connection.delete do |req|
-        req.options.deep_merge!(options)
+        req.saddle_options = options
         req.url(url, params)
       end
       handle_response(response)
@@ -131,61 +132,61 @@ module Saddle
 
     # Build a connection instance, wrapped in the middleware that we want
     def connection
-      @connection ||= Faraday.new(base_url) do |builder|
+      @connection ||= Faraday.new(base_url, :builder_class => Saddle::RackBuilder) do |connection|
         # Include the requester level options
-        builder.options[:client_options] = @options
+        connection.builder.saddle_options[:client_options] = @options
 
         # Config options
-        builder.options[:timeout] = @timeout
-        builder.options[:request_style] = @request_style
-        builder.options[:num_retries] = @num_retries
-        builder.options[:saddle] = {
+        connection.options[:timeout] = @timeout
+        connection.builder.saddle_options[:request_style] = @request_style
+        connection.builder.saddle_options[:num_retries] = @num_retries
+        connection.builder.saddle_options[:saddle] = {
           :client => @parent_client,
         }
 
         # Support default return values upon exception
-        builder.use(Saddle::Middleware::Response::DefaultResponse)
+        connection.use(Saddle::Middleware::Response::DefaultResponse)
 
         # Hard timeout on the entire request
-        builder.use(Saddle::Middleware::RubyTimeout)
+        connection.use(Saddle::Middleware::RubyTimeout)
 
         # Set up a user agent
-        builder.use(Saddle::Middleware::Request::UserAgent)
+        connection.use(Saddle::Middleware::Request::UserAgent)
 
         # Set up the path prefix if needed
-        builder.use(Saddle::Middleware::Request::PathPrefix)
+        connection.use(Saddle::Middleware::Request::PathPrefix)
 
         # Apply additional implementation-specific middlewares
         @additional_middlewares.each do |m|
-          m[:args] ? builder.use(m[:klass], *m[:args]) : builder.use(m[:klass])
+          m[:args] ? connection.use(m[:klass], *m[:args]) : connection.use(m[:klass])
         end
 
         # Request encoding
-        builder.use(Saddle::Middleware::Request::JsonEncoded)
-        builder.use(Saddle::Middleware::Request::UrlEncoded)
+        connection.use(Saddle::Middleware::Request::JsonEncoded)
+        connection.use(Saddle::Middleware::Request::UrlEncoded)
 
         # Automatic retries
-        builder.use(Saddle::Middleware::Request::Retry)
+        connection.use(Saddle::Middleware::Request::Retry)
 
         # Raise exceptions on 4xx and 5xx errors
-        builder.use(Saddle::Middleware::Response::RaiseError)
+        connection.use(Saddle::Middleware::Response::RaiseError)
 
         # Handle parsing out the response if it's JSON
-        builder.use(Saddle::Middleware::Response::ParseJson)
+        connection.use(Saddle::Middleware::Response::ParseJson)
 
         # Set up instrumentation around the adapter for extensibility
-        builder.use(FaradayMiddleware::Instrumentation)
+        connection.use(FaradayMiddleware::Instrumentation)
 
         # Add in extra env data if needed
-        builder.use(Saddle::Middleware::ExtraEnv)
+        connection.use(Saddle::Middleware::ExtraEnv)
 
         # Set up our adapter
         if @stubs.nil?
           # Use the default adapter
-          builder.adapter(@http_adapter[:key], *@http_adapter[:args])
+          connection.adapter(@http_adapter[:key], *@http_adapter[:args])
         else
           # Use the test adapter
-          builder.adapter(:test, @stubs)
+          connection.adapter(:test, @stubs)
         end
       end
     end

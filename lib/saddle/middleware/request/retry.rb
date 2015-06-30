@@ -17,13 +17,13 @@ module Saddle
         end
 
         def call(env)
-          retries = env[:request][:num_retries] || 0
-          backoff = env[:request][:retry_backoff] || 0.050 # in seconds
+          retries = env[:saddle][:num_retries] || 0
+          backoff = env[:saddle][:retry_backoff] || 0.050 # in seconds
           begin
             @app.call(self.class.deep_copy(env))
           rescue => e
             # Only retry for GET or if the request is marked as idempotent
-            if env[:method] == :get || env[:request][:idempotent]
+            if env[:method] == :get || env[:saddle][:idempotent]
               unless @ignored_exceptions.include?(e.class)
                 # Retry a limited number of times
                 if retries > 0
@@ -40,7 +40,11 @@ module Saddle
         end
 
         def self.deep_copy(value)
-          if value.is_a?(Hash)
+          if value.is_a?(Struct)
+            result = value.clone
+            value.each{|k, v| result[k] = deep_copy(v)}
+            result
+          elsif value.is_a?(Hash)
             result = value.clone
             value.each{|k, v| result[k] = deep_copy(v)}
             result

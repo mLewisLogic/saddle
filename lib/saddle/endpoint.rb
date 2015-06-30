@@ -17,7 +17,7 @@ module Saddle
     def initialize(requester, relative_path_override=nil, parent=nil)
       @requester = requester
       @parent = parent
-      @relative_path = relative_path_override || _relative_path()
+      @relative_path = relative_path_override || _relative_path
     end
 
 
@@ -26,7 +26,7 @@ module Saddle
       # Augment in interesting options
       options[:saddle] ||= {}
       options[:saddle] = {
-        :call_chain => _path_array(),
+        :call_chain => _path_array,
         :action => action,
       }
       @requester.send(method, _path(action), params, options)
@@ -87,7 +87,7 @@ module Saddle
         if defined?(self.class::ABSOLUTE_PATH)
           [self.class::ABSOLUTE_PATH]
         else
-          _path_array()
+          _path_array
         end
       # Join it with the action
       paths = pre_action_paths + [action]
@@ -97,7 +97,7 @@ module Saddle
     end
 
     def _path_array
-      _endpoint_chain().map(&:relative_path).compact
+      _endpoint_chain.map(&:relative_path).compact
     end
 
     # Get the parent chain that led to this endpoint
@@ -108,7 +108,7 @@ module Saddle
         chain << node
         node = node.parent
       end
-      chain.reverse()
+      chain.reverse
     end
 
     # If the parent is not an endpoint, it is a root node

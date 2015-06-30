@@ -16,10 +16,10 @@ module Saddle
         end
 
         def call(env)
-          if env[:request][:client_options][@key_name.to_sym]
+          if env[:saddle][:client_options][@key_name.to_sym]
             new_query = []
             new_query << env[:url].query if env[:url].query
-            new_query << "#{@key_name}=#{CGI.escape(env[:request][:client_options][@key_name.to_sym].to_s)}"
+            new_query << "#{@key_name}=#{CGI.escape(env[:saddle][:client_options][@key_name.to_sym].to_s)}"
             env[:url].query = new_query.join('&')
           end
 

@@ -10,8 +10,8 @@ module Saddle
 
       class PathPrefix < Faraday::Middleware
         def call(env)
-          if env[:request][:client_options][:path_prefix]
-            env[:url].path = "/#{env[:request][:client_options][:path_prefix]}#{env[:url].path}"
+          if env[:saddle][:client_options][:path_prefix]
+            env[:url].path = "/#{env[:saddle][:client_options][:path_prefix]}#{env[:url].path}"
           end
 
           @app.call env

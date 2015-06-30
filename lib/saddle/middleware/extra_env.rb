@@ -9,8 +9,8 @@ module Saddle
 
     class ExtraEnv < Faraday::Middleware
       def call(env)
-        if env[:request][:client_options][:extra_env]
-          env.merge!(env[:request][:client_options][:extra_env])
+        if env[:saddle][:client_options][:extra_env]
+          env.merge!(env[:saddle][:client_options][:extra_env])
         end
 
         @app.call env
