@@ -15,7 +15,7 @@ module Saddle
             @app.call(env)
           rescue => e
             if defined?(Rails.logger)
-              Rails.logger.error("#{env[:saddle][:saddle][:client].name} error: #{e}")
+              Rails.logger.error("#{env[:saddle][:client].name} error: #{e}")
             end
             # Re-raise the error
             raise

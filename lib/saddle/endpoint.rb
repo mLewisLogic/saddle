@@ -24,11 +24,8 @@ module Saddle
     # Generic request wrapper
     def request(method, action, params={}, options={})
       # Augment in interesting options
-      options[:saddle] ||= {}
-      options[:saddle] = {
-        :call_chain => _path_array,
-        :action => action,
-      }
+      options[:call_chain] = _path_array
+      options[:action] = action
       @requester.send(method, _path(action), params, options)
     end
 

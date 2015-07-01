@@ -140,9 +140,7 @@ module Saddle
         connection.options[:timeout] = @timeout
         connection.builder.saddle_options[:request_style] = @request_style
         connection.builder.saddle_options[:num_retries] = @num_retries
-        connection.builder.saddle_options[:saddle] = {
-          :client => @parent_client,
-        }
+        connection.builder.saddle_options[:client] = @parent_client
 
         # Support default return values upon exception
         connection.use(Saddle::Middleware::Response::DefaultResponse)

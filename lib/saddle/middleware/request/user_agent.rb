@@ -13,7 +13,7 @@ module Saddle
           user_agent = nil
           # Build a user agent that looks like 'SaddleExample 0.0.1'
           begin
-            user_agent = client_name = env[:saddle][:saddle][:client].name
+            user_agent = client_name = env[:saddle][:client].name
             parent_module = client_name.split('::')[0..-2].join('::').constantize
             if parent_module
               if defined?(parent_module::VERSION)
