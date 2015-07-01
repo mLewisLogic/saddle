@@ -42,7 +42,7 @@ module Saddle
         def self.deep_copy(value)
           if value.is_a?(Struct)
             result = value.clone
-            value.each{|k, v| result[k] = deep_copy(v)}
+            value.each{|k, v| result.send("#{k}=", deep_copy(v))}
             result
           elsif value.is_a?(Hash)
             result = value.clone
