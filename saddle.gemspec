@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
     s.add_dependency 'activesupport', '>= 3.0'
   end
 
-  s.add_dependency 'faraday', '~> 0.8.7'
+  s.add_dependency 'faraday', '~> 0.9.0'
   s.add_dependency 'faraday_middleware', '~> 0.9.0'
 end

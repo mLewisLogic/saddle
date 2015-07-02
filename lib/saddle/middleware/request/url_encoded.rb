@@ -24,7 +24,7 @@ module Saddle
 
 
         def call(env)
-          if env[:request][:request_style] == :urlencoded
+          if env[:saddle][:request_style] == :urlencoded
             # Make sure we're working with a valid body that's not a String
             if env[:body] and !env[:body].respond_to?(:to_str)
               if has_multipart?(env[:body])

@@ -26,7 +26,7 @@ describe Saddle::Client do
       end
 
       it "should request properly with params in the body" do
-        @stubs.send(:new_stub, :get, '/test', "body data") {
+        @stubs.send(:new_stub, :get, '/test', {}, "body data") {
           [
             200,
             {},

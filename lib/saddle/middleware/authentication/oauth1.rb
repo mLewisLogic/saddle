@@ -14,17 +14,17 @@ module Saddle
         TYPE_URLENCODED = 'application/x-www-form-urlencoded'.freeze
 
         def call(env)
-          if env[:request][:client_options][:oauth1] &&
-             env[:request][:client_options][:oauth1][:consumer_key] &&
-             env[:request][:client_options][:oauth1][:consumer_secret] &&
-             env[:request][:client_options][:oauth1][:token] &&
-             env[:request][:client_options][:oauth1][:token_secret]
+          if env[:saddle][:client_options][:oauth1] &&
+             env[:saddle][:client_options][:oauth1][:consumer_key] &&
+             env[:saddle][:client_options][:oauth1][:consumer_secret] &&
+             env[:saddle][:client_options][:oauth1][:token] &&
+             env[:saddle][:client_options][:oauth1][:token_secret]
 
             env[:request_headers]['Authorization'] ||= SimpleOAuth::Header.new(
               env[:method],
               env[:url].to_s,
               filtered_body_params(env),
-              env[:request][:client_options][:oauth1]
+              env[:saddle][:client_options][:oauth1]
             ).to_s
           end
 
