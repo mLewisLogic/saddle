@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.3, 2.4, 2.5, 2.6, 2.7]
+        ruby-version: [2.3, 2.4, 2.5, 2.6, 2.7, '3.0', 3.1]
         gemfile:
           - activesupport_3.0
           - activesupport_3.1
@@ -59,6 +59,18 @@ jobs:
           gemfile: activesupport_3.0
         - ruby-version: 2.7
           gemfile: activesupport_3.1
+        - ruby-version: '3.0'
+          gemfile: activesupport_3.0
+        - ruby-version: '3.0'
+          gemfile: activesupport_3.1
+        - ruby-version: '3.0'
+          gemfile: activesupport_4.1
+        - ruby-version: 3.1
+          gemfile: activesupport_3.0
+        - ruby-version: 3.1
+          gemfile: activesupport_3.1
+        - ruby-version: 3.1
+          gemfile: activesupport_4.1
     steps:
     - uses: actions/checkout@v3
 
