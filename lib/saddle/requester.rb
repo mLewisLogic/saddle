@@ -1,4 +1,5 @@
 require 'active_support/core_ext/hash'
+require 'active_support/notifications'
 
 require 'faraday'
 require 'saddle/faraday/request'
