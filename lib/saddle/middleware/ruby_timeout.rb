@@ -19,7 +19,7 @@ module Saddle
         end
       # It is possible that faraday will catch the timeout first and throw
       # this exception, rethrow as a class derived from standard error.
-      rescue Faraday::Error::TimeoutError
+      rescue Faraday::TimeoutError
         raise Saddle::TimeoutError
       end
 
