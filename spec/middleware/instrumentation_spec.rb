@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 
-describe 'FaradayMiddleware::Instrumentation' do
+describe 'Faraday::Instrumentation' do
 
   context "test integration of instrumentation middleware" do
 

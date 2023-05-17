@@ -1,7 +1,6 @@
 require 'active_support/core_ext/hash'
 
 require 'faraday'
-require 'faraday_middleware'
 require 'saddle/faraday/request'
 require 'saddle/faraday/rack_builder'
 
@@ -173,7 +172,7 @@ module Saddle
         connection.use(Saddle::Middleware::Response::ParseJson)
 
         # Set up instrumentation around the adapter for extensibility
-        connection.use(FaradayMiddleware::Instrumentation)
+        connection.request :instrumentation
 
         # Add in extra env data if needed
         connection.use(Saddle::Middleware::ExtraEnv)
