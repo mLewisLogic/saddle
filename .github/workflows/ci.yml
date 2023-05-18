@@ -13,6 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        ruby-version: [2.3, 2.4, 2.5, 2.6, 2.7]
+        gemfile:
+          - activesupport_3.0
+          - activesupport_3.1
+          - activesupport_3.2
+          - activesupport_4.0
+          - activesupport_4.1
+          - activesupport_4.2
+          - activesupport_5.0
+          - activesupport_5.1
+          - activesupport_5.2
+          - activesupport_6.0
+          - activesupport_6.1
+          - activesupport_7.0
         include: # use bundler 2.3 for ruby versions < 2.6 (https://bundler.io/compatibility.html)
         - ruby-version: 2.3
           bundler-version: 2.3
@@ -24,13 +38,46 @@ jobs:
           bundler-version: latest
         - ruby-version: 2.7
           bundler-version: latest
+        exclude:
+        - ruby-version: 2.3
+          gemfile: activesupport_6.0
+        - ruby-version: 2.3
+          gemfile: activesupport_6.1
+        - ruby-version: 2.3
+          gemfile: activesupport_7.0
+        - ruby-version: 2.4
+          gemfile: activesupport_6.0
+        - ruby-version: 2.4
+          gemfile: activesupport_6.1
+        - ruby-version: 2.4
+          gemfile: activesupport_7.0
+        - ruby-version: 2.5
+          gemfile: activesupport_7.0
+        - ruby-version: 2.6
+          gemfile: activesupport_7.0
+        - ruby-version: 2.7
+          gemfile: activesupport_3.0
+        - ruby-version: 2.7
+          gemfile: activesupport_3.1
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler: ${{ matrix.bundler-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+    - name: Generate Appraisal gemfiles
+      run: bundle exec appraisal generate
+
+    - name: Install dependencies
+      env:
+        BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
+      run: bundle install
+
     - name: Run rspec
+      env:
+        BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
       run: bundle exec rspec

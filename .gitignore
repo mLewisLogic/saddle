@@ -12,6 +12,7 @@
 # Gems
 *.gem
 Gemfile.lock
+gemfiles/*.lock
 
 # IDEs
 .idea

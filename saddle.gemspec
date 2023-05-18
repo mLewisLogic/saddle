@@ -21,13 +21,11 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split($\)
   s.executables   = ['saddle']
   s.test_files    = s.files.grep(%r{^(spec)/})
-  
-  if RUBY_VERSION < '1.9'
-    s.add_dependency 'activesupport', '~> 3.0'
-  else
-    s.add_dependency 'activesupport', '>= 3.0'
-  end
+
+  s.add_dependency 'activesupport', '>= 3.0'
 
   s.add_dependency 'faraday', '~> 0.9.0'
   s.add_dependency 'faraday_middleware', '~> 0.9.0'
+
+  s.add_development_dependency 'appraisal'
 end

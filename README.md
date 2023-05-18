@@ -67,6 +67,39 @@ Saddle enables you to create beautifully stable and functionaly API clients, in 
 * Saddle versions 0.1.x are compatible with Faraday versions ~> 0.9.0
 * Saddle versions 0.0.x are compatible with Faraday versions ~> 0.8.7
 
+## Appraisal Usage
+
+Appraisal is a gem that allows us to test our library against different versions of dependencies in repeatable scenarios called "appraisals". For more information see
+the [Appraisal repository](https://github.com/thoughtbot/appraisal)
+
+First make sure appraisal is installed by running
+
+```
+$ bundle install
+```
+
+To update the Appraisal's gemfiles run
+
+```
+$ bundle exec appraisal generate
+```
+
+To test against a specific version of `activesupport` first install the dependencies, ideally we would want to install them by running
+```
+$ bundle exec appraisal install
+```
+
+However, this isn't posible fot the different constraints these versions have. So instead install the dependencies for the desired version we want to test against by running
+
+```
+$ BUNDLE_GEMFILE=gemfiles/activesupport_6.0.gemfiles bundle install
+```
+
+In this example we want to install the dependencies of `activesupport` version `6.0`. Then to run `rspec` with that constraints we run
+
+```
+$ BUNDLE_GEMFILE=gemfiles/activesupport_6.0.gemfiles bundle exec rspec
+```
 
 ## Code Status
 
