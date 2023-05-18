@@ -15,8 +15,6 @@ jobs:
       matrix:
         ruby-version: [2.6, 2.7, '3.0', 3.1]
         gemfile:
-          - activesupport_3.0
-          - activesupport_3.1
           - activesupport_3.2
           - activesupport_4.0
           - activesupport_4.1
@@ -30,20 +28,8 @@ jobs:
         exclude:
         - ruby-version: 2.6
           gemfile: activesupport_7.0
-        - ruby-version: 2.7
-          gemfile: activesupport_3.0
-        - ruby-version: 2.7
-          gemfile: activesupport_3.1
-        - ruby-version: '3.0'
-          gemfile: activesupport_3.0
-        - ruby-version: '3.0'
-          gemfile: activesupport_3.1
         - ruby-version: '3.0'
           gemfile: activesupport_4.1
-        - ruby-version: 3.1
-          gemfile: activesupport_3.0
-        - ruby-version: 3.1
-          gemfile: activesupport_3.1
         - ruby-version: 3.1
           gemfile: activesupport_4.1
     steps:
