@@ -22,10 +22,10 @@ Gem::Specification.new do |s|
   s.executables   = ['saddle']
   s.test_files    = s.files.grep(%r{^(spec)/})
 
-  s.add_dependency 'activesupport', '>= 3.0'
+  s.required_ruby_version = '>= 2.6'
 
-  s.add_dependency 'faraday', '~> 0.9.0'
-  s.add_dependency 'faraday_middleware', '~> 0.9.0'
+  s.add_dependency 'activesupport', '>= 3.2'
+  s.add_dependency 'faraday', '~> 2.1'
 
   s.add_development_dependency 'appraisal'
 end

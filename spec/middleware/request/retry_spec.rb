@@ -72,7 +72,7 @@ describe Saddle::Client do
           }
           expect {
             @default_client.requester.post(url)
-          }.to raise_error(Faraday::Error::ClientError)
+          }.to raise_error(Faraday::ClientError)
         end
 
         it "should retry if it is marked as idempotent" do

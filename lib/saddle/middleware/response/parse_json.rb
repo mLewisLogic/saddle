@@ -1,7 +1,5 @@
 require 'faraday'
 
-
-
 module Saddle
   module Middleware
     module Response
@@ -11,10 +9,6 @@ module Saddle
 
         CONTENT_TYPE = 'Content-Type'.freeze
         MIME_TYPE    = 'application/json'.freeze
-
-        dependency do
-          require 'json' unless defined?(::JSON)
-        end
 
         def call(env)
           result = @app.call(env)

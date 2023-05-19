@@ -1,7 +1,5 @@
 require 'faraday'
 
-
-
 module Saddle
   module Middleware
     module Request
@@ -14,10 +12,6 @@ module Saddle
       class JsonEncoded < Faraday::Middleware
         CONTENT_TYPE = 'Content-Type'.freeze
         MIME_TYPE    = 'application/json'.freeze
-
-        dependency do
-          require 'json' unless defined?(::JSON)
-        end
 
         def call(env)
           if env[:saddle][:request_style] == :json

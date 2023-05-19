@@ -1,13 +1,3 @@
-appraise "activesupport_3.0" do
-  gem "activesupport", "~> 3.0.20"
-  gem "i18n", "< 1.4"
-end
-
-appraise "activesupport_3.1" do
-  gem "activesupport", "~> 3.1.12"
-  gem "i18n", "< 1.4"
-end
-
 appraise "activesupport_3.2" do
   gem "activesupport", "~> 3.2.22"
 end

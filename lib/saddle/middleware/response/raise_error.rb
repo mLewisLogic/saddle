@@ -11,9 +11,9 @@ module Saddle
 
           case result.status
           when 404
-            raise Faraday::Error::ResourceNotFound, response_values(result)
+            raise Faraday::ResourceNotFound, response_values(result)
           when 400...600
-            raise Faraday::Error::ClientError, response_values(result)
+            raise Faraday::ClientError, response_values(result)
           end
 
           result

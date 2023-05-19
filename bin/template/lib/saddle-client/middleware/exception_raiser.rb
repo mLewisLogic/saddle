@@ -19,7 +19,7 @@ module <%= root_module %>
       def call(env)
         begin
           @app.call(env)
-        rescue Faraday::Error::ClientError => e
+        rescue Faraday::ClientError => e
           # This is our chance to reinterpret the response into a meaningful, client-specific
           # exception that a consuming service can handle
           exception = <%= root_module %>::GenericException
