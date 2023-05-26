@@ -64,6 +64,7 @@ Saddle enables you to create beautifully stable and functionaly API clients, in 
 
 ## version notes
 
+* Saddle versions 0.2.x supports Ruby 3.x, drops support for 2.6
 * Saddle versions 0.1.x are compatible with Faraday versions ~> 0.9.0
 * Saddle versions 0.0.x are compatible with Faraday versions ~> 0.8.7
 
@@ -103,9 +104,7 @@ $ BUNDLE_GEMFILE=gemfiles/activesupport_6.0.gemfiles bundle exec rspec
 
 ## Code Status
 
-* [![Build Status](https://travis-ci.org/mLewisLogic/saddle.png?branch=master)](https://travis-ci.org/mLewisLogic/saddle)
 * [![Code Climate](https://codeclimate.com/github/mLewisLogic/saddle.png)](https://codeclimate.com/github/mLewisLogic/saddle)
-* [![Dependency Status](https://gemnasium.com/mLewisLogic/saddle.png)](https://gemnasium.com/mLewisLogic/saddle)
 
 
 ## License
