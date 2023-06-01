@@ -47,13 +47,13 @@ module Saddle
       @host = opt[:host] || 'localhost'
       raise ':host must be a string' unless @host.is_a?(String)
       @port = opt[:port]
-      raise ':port must be nil or an integer' unless (@port.nil? || @port.is_a?(Fixnum))
+      raise ':port must be nil or an integer' unless (@port.nil? || @port.is_a?(Integer))
       @use_ssl = opt[:use_ssl] || false
       raise ':use_ssl must be true or false' unless (@use_ssl.is_a?(TrueClass) || @use_ssl.is_a?(FalseClass))
       @request_style = opt[:request_style] || :json
       raise ":request_style must be in: #{VALID_BODY_STYLES.join(',')}" unless VALID_BODY_STYLES.include?(@request_style)
       @num_retries = opt[:num_retries] || 3
-      raise ':num_retries must be an integer' unless @num_retries.is_a?(Fixnum)
+      raise ':num_retries must be an integer' unless @num_retries.is_a?(Integer)
       @timeout = opt[:timeout]
       raise ':timeout must be nil or an integer' unless (@timeout.nil? || @timeout.is_a?(Numeric))
       @extra_env = opt[:extra_env] || {}
