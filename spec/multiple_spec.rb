@@ -61,8 +61,8 @@ describe Saddle::Client do
         client2 = Client2.create(:stubs => stubs)
 
         # Make sure client2's middleware isn't called
-        Middleware1.any_instance.should_receive(:subcall)
-        Middleware2.any_instance.should_not_receive(:subcall)
+        allow_any_instance_of(Middleware1).to receive(:subcall)
+        allow_any_instance_of(Middleware2).to receive(:subcall)
 
         # Make the call
         client1.requester.get('/')

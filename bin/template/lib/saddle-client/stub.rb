@@ -9,7 +9,7 @@ module <%= root_module %>
 
     # Setup stubbing for all endpoints
     def stub!
-      <%= root_module %>::Endpoints::Status.any_instance.stub(:healthy?).and_return(
+      allow_any_instance_of(<%= root_module %>::Endpoints::Status).to receive(:healthy?).and_return(
         Stub::Data::TEST_STATUS_HEALTHY_RESPONSE
       )
     end

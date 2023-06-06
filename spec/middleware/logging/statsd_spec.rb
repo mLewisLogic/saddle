@@ -15,8 +15,7 @@ describe Saddle::Middleware::Logging::StatsdLogger do
     end
 
     it "should log a request" do
-      ::Statsd.any_instance.should_receive(:time).with("saddle.statsd_client.raw.localhost-test").and_yield
-
+      allow_any_instance_of(::Statsd).to receive(:time).with("saddle.statsd_client.raw.localhost-test").and_yield
       client = StatsdClient.create(
         :stubs => Faraday::Adapter::Test::Stubs.new do |stub|
           stub.get('/test') {
@@ -32,8 +31,7 @@ describe Saddle::Middleware::Logging::StatsdLogger do
     end
 
     it "should allow overriding the path" do
-      ::Statsd.any_instance.should_receive(:time).with("hello").and_yield
-
+      allow_any_instance_of(::Statsd).to receive(:time).with("hello").and_yield
       client = StatsdClient.create(
         :stubs => Faraday::Adapter::Test::Stubs.new do |stub|
           stub.get('/test') {
