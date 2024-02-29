@@ -26,6 +26,8 @@ jobs:
           - activesupport_6.1
           - activesupport_7.0
           - activesupport_7.1
+          - faraday_1
+          - faraday_2
         exclude:
         - ruby-version: 2.6
           gemfile: activesupport_7.1
