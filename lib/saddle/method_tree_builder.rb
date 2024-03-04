@@ -1,3 +1,8 @@
+require 'active_support/version'
+if ActiveSupport::VERSION::STRING >= '7.1'
+  require 'active_support/deprecation'
+  require 'active_support/deprecator'
+end
 require 'active_support/core_ext/string'
 
 require 'saddle/endpoint'
