@@ -37,3 +37,7 @@ end
 appraise "activesupport_7.0" do
   gem "activesupport", "~> 7.0.4"
 end
+
+appraise "activesupport_7.1" do
+  gem "activesupport", "~> 7.1.3"
+end
