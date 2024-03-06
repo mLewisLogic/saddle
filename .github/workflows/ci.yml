@@ -25,7 +25,10 @@ jobs:
           - activesupport_6.0
           - activesupport_6.1
           - activesupport_7.0
+          - activesupport_7.1
         exclude:
+        - ruby-version: 2.6
+          gemfile: activesupport_7.1
         - ruby-version: 2.6
           gemfile: activesupport_7.0
         - ruby-version: '3.0'
