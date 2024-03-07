@@ -2,6 +2,11 @@ require 'active_support/core_ext/hash'
 require 'active_support/notifications'
 
 require 'faraday'
+if Faraday::VERSION < '2'
+  gem 'faraday_middleware'
+
+  require 'faraday_middleware'
+end
 require 'saddle/faraday/request'
 require 'saddle/faraday/rack_builder'
 

@@ -13,6 +13,10 @@ module Saddle
         CONTENT_TYPE = 'Content-Type'.freeze
         MIME_TYPE    = 'application/json'.freeze
 
+        dependency do
+          require 'json' unless defined?(::JSON)
+        end if Faraday::VERSION < '2'
+
         def call(env)
           if env[:saddle][:request_style] == :json
             # Make sure we're working with a valid body that's not a String
